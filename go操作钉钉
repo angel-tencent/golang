@@ -1,0 +1,63 @@
+package main
+import (
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"os/exec"
+	"strings"
+)
+func main() {
+	opstest()
+}
+func SendDingMsg(msg string) {
+	//请求地址模板
+	webHook := `https://oapi.dingtalk.com/robot/send?access_token=xxxxxxxx`
+	content := `{"msgtype": "text",
+	"text": {"content": "`+ msg + `"}
+	}`
+	//创建一个请求
+	req, err := http.NewRequest("POST", webHook, strings.NewReader(content))
+	if err != nil {
+		// handle error
+	}
+	client := &http.Client{}
+	//设置请求头
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	//发送请求
+	resp, err := client.Do(req)
+	//关闭请求
+	defer resp.Body.Close()
+	if err != nil {
+		// handle error
+	}
+}
+func opstest() {
+	strData:=ExecCommand("docker ps | grep gitlab | awk -F' ' '{print $NF}'")
+	//str = strings.Replace(str, " ", "", -1) 去除空格
+	strData = strings.Replace(strData, "\n", "", -1) //去除换行符
+	fmt.Printf("%v,%T",strData,strData)
+	shell:="gitlab"
+	if strData==shell {
+		fmt.Println(strData)
+		SendDingMsg("gitlab is ok")
+	}else {
+		ExecCommand("docker-compose up -d")
+		SendDingMsg("gitlab not ok and up -d")
+	}
+}
+func ExecCommand(strCommand string)string{
+	cmd := exec.Command("/bin/bash", "-c", strCommand)
+	stdout, _ := cmd.StdoutPipe()
+	if err := cmd.Start(); err != nil{
+		fmt.Println("Execute failed when Start:" + err.Error())
+		return ""
+	}
+	out_bytes, _ := ioutil.ReadAll(stdout)
+	stdout.Close()
+	if err := cmd.Wait(); err != nil {
+		fmt.Println("Execute failed when Wait:" + err.Error())
+		return ""
+	}
+	return string(out_bytes)
+}
+
