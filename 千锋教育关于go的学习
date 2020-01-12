@@ -1,0 +1,1874 @@
+前端开发之ES6入门(一)
+前端开发之ES6入门(二)
+前端开发之React(一)
+前端开发之React(二)
+最后有时间还需要把shell脚本再掌握下
+学习go的web开发还需要掌握python课程中的这些web章节
+
+
+变量的声明和初始化
+package main
+import "fmt"
+var m = "21"
+// t:=21 外部全局变量不可以写成这种格式的
+func main() {
+	var (
+		a int
+		b string = "abc"
+		c float32
+		d []int
+		e int32 = 100
+		f [3]string
+		g bool
+		h func() string
+		l = 200
+	)
+	p := "300"
+	m := "190"
+	z:=30
+	m, n, q := "a", "b", 10     //这个地方因为有新的变量出来 所以m虽然重复声明但是不报错
+	fmt.Printf("%T,%v\n", a, a) //t表示变量的类型
+	fmt.Printf("%T,%q\n", b, b)
+	fmt.Printf("%T,%v\n", c, c)
+	fmt.Printf("%T,%v\n", d, d)
+	fmt.Printf("%T,%v\n", e, e)
+	fmt.Printf("%T,%v\n", f, f)
+	fmt.Printf("%T,%v\n", g, g)
+	fmt.Printf("%T,%v\n", h, h)
+	fmt.Printf("%T,%v\n", l, l) //自动推断功能
+	fmt.Printf("%T,%v\n", p, p)
+	fmt.Printf("%T,%v\n", m, m)
+	fmt.Printf("%T,%v\n", n, q)
+	x := 10
+	y := 20
+	fmt.Println(x, "	", y)
+	x, y,z = y, z,x
+	fmt.Println(x, "	", y)
+}
+
+数据类型
+基本数据类型:整型 浮点型 布尔型 字符串 字符 
+符合数据类型: 指针 数组 切片 映射 函数 结构体 通道
+package main
+import (
+	"fmt"
+
+)
+func main() {
+	a:=100
+	var b byte=100
+	var c rune=200 //字符类型一般不这么写 它相当于int8的别名
+	var e byte='a'
+	var f rune='b'
+	fmt.Printf("%T,%v\n",a,a) //t类型 v值
+	fmt.Printf("%T,%v\n",b,b)
+	fmt.Printf("%T,%v\n",c,c)
+	fmt.Printf("%T,%v\n",e,e) //这里是ascii表里面的数值对应十进制97一般byte和rune也就是字符类型的会这么用
+	fmt.Printf("%T,%v\n",f,f) //这里是ascii表里面的数值对应十进制98
+	tmep:=`
+	x := 10
+	y := 20
+	fmt.Println(x, "	", y)
+	x, y,z = y, z,x
+	fmt.Println(x, "	", y)
+`
+	fmt.Println(tmep) //``表示输出原有的字符串
+}
+打印格式化:
+通用:
+%v 值的默认格式表示
+%+v 类似%v,但输出结构体时会添加字段名
+%#v值的go语法表示
+%T值的类型的go语法表示
+布尔值
+%t 单词true和false
+整数
+%b 表示为二进制
+%c 该值对应的unicode码值
+%d表示为十进制
+%8d表示该整型长度是8 不足8则在数值前补空格 如果超出8则以实际为准
+$O 表示八进制
+%q 该值对应的单引号括起来的go语法字符字面值 必要时会采用安全的转义表示
+%X 表示为十六进制 使用A-F
+%x 表示为十六进制 使用a-f
+%U 表示为unicode格式
+浮点数与复数的两个组分
+%b 无小数部分 二进制指数的科学计算法 
+%e 有6位小数部分的科学计算计数法
+%f 有6位小数部分 如123.000000float浮点数****
+
+字符串和byte
+%s 直接输出字符串或[]byte string
+%q  该值对应的双引号括起来的go语法字符串字面值 必要时会采取安全的转义表示
+%x 每个字节用两个字符十六进制数表示(a-f)
+%X 每个字节用两个字符十六进制数表示(A-F)
+Println：用默认的类型格式显示方式将传入的参数写入到标准输出里面(即在终端中有显示)，
+Printf：用传入的格式化规则符将传入的变量写入到标准输出里面(即在终端中有显示)，
+Sprintf:用传入的格式化规则符将传入的变量格式化，(终端中不会有显示)
+//进制转换网站https://tool.lu/hexconvert/
+package main
+import "fmt"
+type point struct {
+	x,y int
+}
+func main() {
+	str:="steven"
+	fmt.Printf("%T,%v\n",str,str)
+	var a rune='一' //int32的别名 值是uncode的序列号
+	fmt.Printf("%T,%v\n",a,a)
+	p:=point{1,2}
+	fmt.Printf("%T,%v\n",p,p) //mian是包名,point是结构体名
+	fmt.Printf("%T,%v\n",true,true) //%v是获取万能的变量的值bool型格式
+	fmt.Printf("%T,%05d\n",123,123558) //%d表示整型格式的值5个长度用0表示出来不足以0表示 超出的则直接显示常值
+	fmt.Printf("%T,%b\n",123,123) //%b将十进制转换成二进制
+	str=fmt.Sprintf("%b",123) //将数值换成字符串格式的值并给str获取
+	fmt.Println(str)
+	fmt.Printf("%x\n",123)
+	fmt.Printf("%X\n",123)
+	fmt.Printf("%u\n",'a')
+}
+
+
+数据类型转换 #需要掌握asiic表
+package main
+import "fmt"
+func main() {
+	chinese:=90
+	english:=80.5//未写的话是默认float64字节保存的数值
+	avg:=(chinese + int(english))/2
+	fmt.Println(avg)
+	avg2:=(float64(chinese) + english)/2
+	fmt.Println(avg2)
+	//flag:=true
+	//int(flag)
+	//str:="steven"
+	//int(str)
+	x:='Z'
+	result := string(chinese)
+	result = string(x)
+	fmt.Println(result)
+	fmt.Println(x)
+}
+
+int可以转换成string 但是不能反过来转
+int和flaot可以相互转换
+bool型不可以转换
+
+
+常量及iota
+lota特殊的常量值 是一个系统定义的可以被编译器修改的值 iota只能出现在常量中
+在每一个const关键字出现时 被重置为0 然后每出现一个常量 iota所代表的数值会自动增加1
+iota可以理解为常量组中的计数器
+iota可以被用作枚举值
+package main
+import "fmt"
+type Man struct {
+	age,height int
+}
+func main() {
+	const NAME ="STEVEN"
+	//NAME="daniel"
+	//man:=Man{30,177}
+	//const PERSON  = man 自己定义的类型不可以作为常量类型
+	fmt.Println(NAME)
+	const (
+		X="a"
+		Y
+		A=10
+		B
+		C
+	)
+	fmt.Println(A,B,C,X,Y) //已经定义的常量会自动获取非空常量的值,上面一定要有一个值才行
+	const(
+		L=iota
+		M
+		n
+	)
+	fmt.Println(L,M,n)
+	const(
+		L1="ABC" //0
+		L2=iota //1
+		L3   //2
+	)
+	fmt.Println(L1,L2,L3)
+	const (
+		i=1<<iota
+		j=3<<iota
+		k
+		l
+	)
+	fmt.Println(i,j,k,l)
+	const (
+		a1='一' //19968
+		b1 //19968
+		c1=iota //2
+		d1  //3
+	)
+	fmt.Println(a1,b1,c1,d1)
+}
+运算符
++ - * / % ++ --
+package main
+import "fmt"
+var a = 21.0
+var b = 5.0
+var c float64
+func main() {
+	Arithmetic()
+	Relational()
+}
+//算数运算符
+func Arithmetic(){
+	c=a+b
+	fmt.Printf("c值为=%.2f\n",c)
+	c=a-b
+	fmt.Printf("c值为=%.2f\n",c)
+	c=a*b
+	fmt.Printf("c值为=%.2f\n",c)
+	c=a/b
+	fmt.Printf("c值为=%.2f\n",c)
+	a++
+	fmt.Printf("c值为=%.2f\n",a)
+	a=21
+	a--
+	fmt.Printf("c值为=%.2f\n",a)
+	//c=a%b
+	fmt.Printf("c的值为:%f\n",int(a)%int(b)) //取摸运算的时候必须为Int
+}
+func Relational(){
+	if (a==b){
+		fmt.Printf("a=b\n")
+	}else {
+		fmt.Printf("b!=b\n")
+	}
+	if (a<b) {
+		fmt.Printf("a<b\n")
+	}else {
+		fmt.Printf("a>b\n")
+	}
+}
+
+if判断
+package main
+import (
+	"fmt"
+)
+func main() {
+	//EvenOdd()
+	//ScroeMark()
+	//ScoreMark2()
+	ScoreMark3()
+}
+//判断数值的奇偶性
+func EvenOdd(){
+	num:=30
+	if num%2==0{
+		fmt.Println(num,"偶数")
+	}else {
+		fmt.Println(num,"奇数")
+	}
+}
+//判断学生成绩
+func ScroeMark(){
+	scroe:=78
+	if scroe>=90{
+		fmt.Println("优秀")
+	}
+	if scroe>=80 && scroe<90{
+		fmt.Println("良好")
+	}
+	if scroe>=70&& scroe<80{
+		fmt.Println("中等")
+	}
+	if scroe>=60&& scroe<70{
+		fmt.Println("及格")
+	}
+	if scroe<=60{
+		fmt.Println("不及格")
+	}
+}
+func ScoreMark2(){
+	score:=88
+	if score>90{
+		fmt.Println("优秀")
+	}else if score>80{
+		fmt.Println("良好")
+	}else if score>70{
+		fmt.Println("中等")
+	}else if score>60{
+		fmt.Println("及格")
+	}else {
+		fmt.Println("不及格")
+	}
+} //这种只执行其中任意一个分支
+//if嵌套
+func ScoreMark3(){
+	score:=98
+	if score>=60{
+		if score>=70 {
+			if score>=80{
+				if score>=90 {
+					fmt.Println("优秀")
+				}else {
+					fmt.Println("良好")
+				}
+			}else {
+				fmt.Println("中等")
+			}
+		}else {
+			fmt.Println("及格")
+		}
+	}else {
+		fmt.Println("不及格")
+	}
+}
+
+
+
+
+switch语句
+package main
+import "fmt"
+func main() {
+	SocreGrade()
+}
+func SocreGrade() {  //case语句自带了有break中断程序 只匹配到一个后面就中断了
+	score := 98.5
+	grade := "" //让其是一个字符串类型但是先不给值 后面判断之后再给值
+	switch {    //不给函数参数默认为true值
+	case score >= 90:
+		grade = "a"
+		fallthrough //添加这个则会返回两个值 意思是强制执行后面的case语句
+	case score >= 80:
+		grade = "b"
+	case score >= 70:
+		grade = "c"
+	case score >= 60:
+		grade = "d"
+	default:
+		grade = "e"
+	}
+	fmt.Printf("你的等级是:%s \n", grade)
+	fmt.Printf("你的评价是: ")//这里不写的原因是下面还有一个输出
+	//grade:="a" //利用变量的方式去做执行判断
+	switch grade {
+	case "a":
+		fmt.Println("优秀")
+	case "b":
+		fmt.Println("良好")
+	case "c":
+		fmt.Println("中等")
+	case "d":
+		fmt.Println("及格")
+	default:
+		fmt.Println("不及格")
+	}
+
+}
+判断年月日天数
+package main
+import "fmt"
+func main() {
+	getDaysByMonth()
+}
+func getDaysByMonth() {
+	//定义局部变量:年月日
+	year := 2019
+	month := 12
+	days := 0
+	switch month {
+	case 1, 3, 5, 7, 8, 10, 12:
+		days = 31
+	case 4, 6, 9, 11:
+		days = 30
+	case 2:
+		if (year%4 == 0 && year%100 != 0) || year%400 == 0 {
+			days = 29
+		} else {
+			days = 28
+		}
+	default:
+		days = -1
+	}
+	fmt.Printf("%d年%d月的天数为:%d", year, month, days)
+}
+
+
+for循环
+package main
+
+import "fmt"
+
+func main() {
+	i:=0
+	for ; i<=10;i++{
+		fmt.Printf("%d\n",i)
+	}
+	for ; ;i++{
+		if i>20{
+			break
+		}
+		fmt.Printf("%d\n",i)
+	}
+	
+}
+
+package main
+import "fmt"
+func main() {
+	//summation()
+	//summation2()
+	cutBamboo()
+	traversestring()
+	traverseSlice()
+	chengfabiao()
+}
+//计算1-100之间的和
+func summation()  {
+	result:=0
+	for i:=1;i<=100;i++{
+		result+=i
+	}
+	fmt.Println(result)
+}
+//计算1-100之间3的倍数的和
+func summation2()  {
+	result:=0
+	i:=1
+	for i<=100 {
+		if i%3==0{
+			result+=i
+			fmt.Print(i)
+			if i<99{
+				fmt.Print("+")
+			}else {
+				fmt.Printf("=%d\n",result)
+			}
+		}
+		i++
+	}
+	//fmt.Println(result)
+}
+//截竹竿 32米竹竿 每次截1.5米最快截几次之后能小于4米?
+func cutBamboo()  {
+	count:=0
+	for i:=32.0;i>=4;i-=1.5{
+		count++
+	}
+	fmt.Println(count)
+}
+func traversestring() {
+	str := "123ABCDE一定丂"
+	for i, value := range str {
+		fmt.Printf("第%d位字符是:%v,字符是:%c \n", i, value,value) //%c表示字符的本身打印出来
+	}
+}
+//遍历一个切片
+func traverseSlice()  {
+	arr :=[]int{100,200,300}
+	for i,value:=range arr{
+		fmt.Println(i,":",value)
+	}
+}
+
+for循环的嵌套形式
+#关于循环还可以再看一遍
+//打印99乘法表:
+func chengfabiao()  {
+	for i:=1;i<=9;i++{
+		for j:=1;j<=i;j++{
+			fmt.Printf("%d*%d=%d ",i,j,i*j)
+		}
+		fmt.Println( )
+	}
+}
+
+break和continue
+package main
+import (
+	"fmt"
+
+)
+func main() {
+	//breakcontinue()
+	sum()
+}
+func breakcontinue()  {
+	fmt.Println("\nbreak,continue区别")
+	for i:=1;i<=10;i++{
+		if i==5{
+			break
+		}
+		fmt.Println(i)
+	}
+	fmt.Println("\ncontinue跳过某次循环")
+	for i:=1;i<=10;i++{
+		if i==5{
+			continue
+		}
+		fmt.Println(i)
+	}
+}
+//输出1-50之间所有不包含4的数字
+func sum(){
+	for i:=1;i<=50;i++{
+		if i==4||i%10==4||i/10%10==4{ //分别判断商与10取摸是否为4
+			continue
+		}else {
+			fmt.Println(i)
+		}
+	}
+}
+函数声明和变量:
+函数是组织好的可重复使用的执行特定任务的代码块 它可以提高应用程序的模块性和代码的重复利用率
+go语言支持普通函数 匿名函数和闭包 从设计上对函数进行了优化和改进让函数使用起来更加方便
+go语言的函数属于一等公民(first-classs)
+函数本身可以作为值进行传递
+支持匿名函数和闭包(closure)
+函数可以满足接口
+函数的语法格式:
+func 函数名(参数列表)(返回参数列表){
+    //函数体
+}
+func funcname(parametername type1,parametername type2) (output1 type1,output2 type2){
+    //逻辑代码
+	//返回多个值
+	return value1,value2...
+}
+package main
+import "fmt"
+var a int=7
+var b int=8
+func main() {
+	a,b,c:=10,20,0
+	fmt.Printf("main()函数中a=%d\n",a) //10
+	fmt.Printf("main()函数中b=%d\n",b) //20
+	fmt.Printf("main()函数中c=%d\n",c)//0
+	c,_=sum2(a,b) //这里的a,b取值范围是main函数中的局部变量a,b的值 多个返回值值用一个用_
+	fmt.Printf("main()函数中c=%d\n",c)
+}
+func sum(a,b int)(int,int){
+	a++  //11
+	b+=2 //22
+	c:=a+b//33
+	d:=a*b
+	fmt.Printf("sum()函数中a=%d\n",a)//11
+	fmt.Printf("sum()函数中b=%d\n",b)//22
+	fmt.Printf("sum()函数中c=%d\n",c)//33
+	return c,d//这里没有定义返回值的名字的时候我们返回的时候需要写上返回值的参数
+}
+func sum2(a,b int)(c,d int){ //多个返回值
+	a++  //11
+	b+=2 //22
+	c=a+b//这里不加:相当于重新定义c的值33
+	d=a*b//这里不加:相当于重新定义d的值也就是返回值d的值242
+	fmt.Printf("sum()函数中a=%d\n",a)//11
+	fmt.Printf("sum()函数中b=%d\n",b)//22
+	fmt.Printf("sum()函数中c=%d\n",c)//33
+	fmt.Printf("sum()函数中d=%d\n",d)//242
+	return  //这里的返回值不写默认为c d
+}
+
+
+函数作为返回值参数使用
+package main
+import (
+	"fmt"
+	"strings"
+)
+type caseFunc func(string) string
+func StringToCase2(str string,myfunc caseFunc) string{
+	return myfunc(str)
+}
+func main() {
+	str:="dadadadadDADSADADADA"
+	//result:=processLet(str)
+	//fmt.Println(result)
+	//使用函数变量的普通用法
+	//fmt.Println(StringToCase(str,processLet))
+	//使用type的函数变量用法
+	fmt.Println(StringToCase2(str,processLet))
+}
+//处理字符串 实现奇偶交替出现
+func processLet(str string) string {
+	result:=""
+	for i,value:=range str{
+		if i%2==0{  //这里是获取字符的下标
+			result+=strings.ToUpper(string(value)) //将字符偶数大写
+		}else {
+			result+=strings.ToLower(string(value))//将字符奇数小写
+		}
+	}
+	return result
+}
+func StringToCase(str string,myfunc func(string) string) string{ //这里主要是定义了两个参数 第一个参数是那倒str字符串的功能 第二个参数是将str做功能处理而需要使用processLet函数作为第二个功能的参数则需要定义一个与之完全一样的格式
+	return myfunc(str)
+}
+
+
+遍历切片的奇偶数 *这里可以再看一遍
+package main
+import (
+	"fmt"
+)
+type myfunc func(int) bool
+func main() {
+	arr:=[]int{23,4,5,6,8,9,10,345,344,412}
+	fmt.Println("slice=",arr)
+	//获取切片中的奇数元素
+	odd:=Fillter(arr,isodd)
+	fmt.Println("奇数元素:",odd)
+	//获取切片中的奇数偶数
+	even:=Fillter(arr,iseven)
+	fmt.Println("奇数元素:",even)
+}
+//判断整型元素是偶数
+func iseven(num int) bool{
+	if num%2==0{
+		return true
+	}
+	return false
+}
+//判断整型元素是奇数
+func isodd(num int) bool{
+	if num%2==0{
+		return false
+	}
+	return true
+}
+//根据函数来处理切片,实现奇数偶数分组,返回新的切片
+func Fillter(arr []int,f myfunc)[]int{
+	var result []int
+	for _,value:=range arr{
+		if f(value){
+			result=append(result,value)
+		}
+	}
+	return result
+}
+匿名函数和闭包
+go语言支持匿名函数,即在需要使用函数时再定义函数 匿名函数没有函数名 只有函数体
+函数可以被作为一种类型被赋值给变量 匿名函数也往往以变量方式被传递
+匿名函数经常被用于实现回调函数 闭包等
+定义格式:
+func(参数列表) (返回参数列表){
+	//函数体
+}
+package main
+import (
+	"fmt"
+	"math"
+)
+func main() {
+	//定义时调用无惨匿名函数
+	func(data int){
+		fmt.Println("你的成绩是:",data)
+	}(98)
+	//定义时调用有参匿名函数
+	result:=func(data float64) float64{
+		return math.Sqrt(data) //有返回值务必要写return语句 sqrt是求平方根的意思
+	}(250)
+	fmt.Println("平方根:",result)
+	//将匿名函数赋值给变量 需要时再调用
+	myfunc:=func(data string)string{
+		return data
+	}
+	fmt.Println(myfunc("欢迎学习Go语言"))
+}
+
+回调函数:
+package main
+import (
+	"fmt"
+	"math"
+)
+type myFuncs func(float64) string
+func main(){
+	arr:=[]float64{1,9,25,30}
+	result:=FliterSlice(arr,func(val float64)string{
+		val=math.Sqrt(val)
+		return fmt.Sprintf("%.0f",val)
+	})
+	fmt.Print(result) //求开平方
+	result=FliterSlice(arr,func(val float64)string{
+		val=math.Pow(val,2)
+		return fmt.Sprintf("%.0f",val)
+	})
+	fmt.Print(result)//求平方
+}
+func FliterSlice(arr []float64,f myFuncs)[]string{
+	var result []string
+	for _,value:=range arr{
+		result=append(result,f(value))
+	}
+	return result
+}
+闭包:
+package main
+import "fmt"
+func main() {
+	for i := 0; i < 10; i++ {
+		fmt.Printf("i=%d\t",i) //t是制表符
+		fmt.Println(add(i))
+	}
+}
+//实现计数的函数
+func add(num int) int {
+	sum := 0
+	sum += num
+	return sum
+}
+
+
+//使用闭包实现计数器函数
+只有闭包才有计数器功能
+package main
+
+import "fmt"
+
+func main() {
+	  res:=adder()
+	  fmt.Printf("%T\n",res)
+	  for i:=0;i<5;i++{
+	  	fmt.Printf("i=%d \t",i)
+	  	fmt.Println(res(i))
+	  }
+}
+func adder() func(int) int{ //这里的返回值是接受下面的func的值
+	sum:=0
+	res:=func(num int)int{ //这里一定是匿名函数
+		sum+=num
+		return sum
+	}
+	return res
+}
+闭包的案列
+package main
+import "fmt"
+func main() {
+	res:=Counter()
+	fmt.Printf("%T\n",res)
+	fmt.Println("res:",res)
+	fmt.Println("res():",res()) //i有一定的记忆功能
+	fmt.Println("res():",res())
+	fmt.Println("res():",res())
+
+	res=Counter()
+	fmt.Printf("%T\n",res)
+	fmt.Println("res:",res)
+	fmt.Println("res():",res()) //i有一定的记忆功能
+	fmt.Println("res():",res())
+	fmt.Println("res():",res())
+
+}
+func Counter()func()int{ //定义一个闭包函数
+	i:=0 //闭包一定要定义需要保护的变量
+	res:=func()int { //闭包一定要定义一个匿名函数
+		i++
+		return i
+	}
+	fmt.Println("Counter内部:",res)
+	return res
+}
+闭包的宁一中写法:闭包的返回值一定是函数
+package main
+import "fmt"
+func main() {
+	res:=func()(func()int){
+		i:=10
+		return func()int{
+			i++
+			return i
+		}
+	}()
+	fmt.Println(res())
+}
+
+函数的可变参数
+package main
+import "fmt"
+func main() {
+	fmt.Println(AddSum(1,2,3,4,5,6))
+	fmt.Println(AddSum())
+	arr:=[]int{3,4,5,34,53,22,343} //arr是一个切片
+	fmt.Println(AddSum(arr...)) //加...表示把切片的元素取出来放置进去
+}
+func AddSum(nums ...int)(sum int)  {
+	fmt.Printf("%T\n",nums)
+	for _,value:=range nums{
+		sum+=value
+	}
+	return
+}
+函数可变参数:
+累加求平均值
+package main
+import "fmt"
+func main() {
+	//1.穿成绩进去调用
+	sum,avg,count,user:=GetScore("steven",90,78,87,68,55)
+	fmt.Printf("学员%s共有%d成绩,总成绩为%.2f,平均成绩为%.2f\n",user,count,sum,avg)
+	//2.传切片的用法
+	scores:=[]float64{90,78,87,68,55,88,57,100}
+	sum,avg,count,user=GetScore("Daniel",scores...)
+	fmt.Printf("学员%s共有%d成绩,总成绩为%.2f,平均成绩为%.2f",user,count,sum,avg)
+}
+//累加求平均分
+func GetScore(name string,scors ...float64)(sum,avg float64,count int,user string){
+	for _,value:=range scors{
+		sum+=value
+		count++
+	}
+	user=name //这里的返回值一定要写清楚是谁接受它
+	avg=sum/float64(count)
+	return
+}
+
+递归函数
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println(GetMutiple(10))
+	fmt.Println(factorial(10))
+}
+//用递归的做法实现阶乘
+func factorial(n int) int{
+	if n==0{
+		return 1
+	}
+	return n*factorial(n-1)
+}
+//通过循环方式实现阶乘
+func GetMutiple(num int)(result int){
+	result=1
+	for i:=1;i<=num;i++{
+		result*=i
+	}
+	return
+}
+
+指针的声明:
+package main
+
+import "fmt"
+
+func main() {
+	a:=10
+	fmt.Printf("变量的地址:%x\n",&a)
+	//&a++ 非数值类型无法参与运算的
+	b:=[]int{1,3,5,7}
+	fmt.Printf("变量的地址:%x\n",&b)
+}
+
+var ip *int 指向整型的指针
+var fp *float32 指向浮点型的指针
+package main
+import "fmt"
+func main() {
+	//实际变量
+	a := 120
+	//声明指针变量
+	var ip *int
+	//给指针变量赋值 将变量a的地址赋值给ip
+	ip=&a
+	fmt.Printf("a的类型是:%T,值是%v\n",a,a)
+	fmt.Printf("a的类型是:%T,值是%v\n",&a,&a)
+	fmt.Printf("a的类型是:%T,值是%v\n",*ip,*ip)
+	fmt.Printf("a的类型是:%T,值是%v\n",*&a,*&a)//指针的*就是原值了
+}
+
+
+复合类型的指针
+package main
+import "fmt"
+type Stuednt struct {
+   name string
+   age int
+   married bool
+   sex int8
+}
+func main() {
+   s1:=Stuednt{"steven",35,true,1}
+   s2:=Stuednt{"Sunny",20,false,0}
+   var a *Stuednt=&s1 //传统数据类型加*表示指针
+   var b *Stuednt=&s2 //&表示获取内存地址
+   fmt.Println("\n-------------")
+   fmt.Printf("s1类型为%T,值为%v\n",s1,s1)//会显示类型的包.类型
+   fmt.Printf("s2类型为%T,值为%v\n",s2,s2)
+   fmt.Println("\n-------------")
+   fmt.Printf("a类型为%T,值为%v\n",a,a)
+   fmt.Printf("b类型为%T,值为%v\n",b,b)
+   fmt.Println("\n-------------")
+   fmt.Printf("*a类型为%T,值为%v\n",*a,*a) //指针前面增加*表示获取原始数据
+   fmt.Printf("*b类型为%T,值为%v\n",*b,*b)
+   //fmt.Println(s1.age,s1.married,s1.name,s1.sex)
+	//fmt.Println(a.sex,a.name,a.married,a.age)
+}
+
+空指针
+package main
+import "fmt"
+func main(){
+	var ptr *int
+	fmt.Printf("ptr类型为%T,值为%v\n",ptr,ptr)
+	if ptr==nil{
+		fmt.Println("空指针")
+	}else {
+		fmt.Println("非空指针")
+	}
+}
+
+指针作为函数的应用
+package main
+
+import "fmt"
+
+func main(){
+	a:=10
+	//b:=&a
+	var b *int=&a
+	fmt.Printf("b的数据类型%T,数值%v\n",b,b)
+	fmt.Println("a的地址T%\n",b)
+	fmt.Println("*b的值T%\n",*b)//10
+	*b++ //b存放的是a的地址所以对b++对于a进行++操作
+	fmt.Println("a的值",a)
+}
+
+
+指针作为参数的时候
+package main
+import "fmt"
+func main()  {
+	a:=10
+	fmt.Println("函数调用钱的值:",a)//10
+	b:=&a
+	chage(b)
+	fmt.Println("函数调用之后a的值",a)//20
+}
+func chage(num *int){
+	*num=20  //地址被重新赋值了 *表示指向num对应的b的原始地址的值
+}
+
+
+
+
+
+
+
+package main
+import "fmt"
+func main(){
+	//定义两个局部变量
+	a,b:=100,200
+	//返回值的写法
+	a,b=swap0(a,b) //有两个返回值则表示需要两个数接收
+	fmt.Println(a,b) //第一次交换
+	//调用swap
+	swap(&a,&b)
+	fmt.Println(a,b) //第二次交换
+}
+//具有返回值的写法,实现两个数值交换
+func swap0(x,y int)(int,int){
+	return y,x
+}
+//使用指针作为参数的写法
+func swap(x,y *int)  {
+	*x,*y=*y,*x
+}
+切片的指针
+package main
+import "fmt"
+func main()  {
+	a:=[]int{1,2,3,4}
+	fmt.Println(a)
+	modify(&a)
+	fmt.Println(a)
+}
+func modify(arr *[]int)  {
+	(*arr)[0]=250
+}
+指针数组
+就是元素为指针的数组
+var ptr [3]*string
+
+
+package main
+import "fmt"
+const count int = 4
+func main() {
+	a := [count]string{"abc", "ABC", "123", "一二三"}
+	fmt.Printf("%T,%v\n",&a,&a) //输出数组的指针
+	//定义一个指针数组
+	var ptr [count]*string //对于复合类型的变量的话没有赋予初始值则默认为nil
+	fmt.Printf("%T,%v\n",ptr,ptr) //存的是数组的每一个元素的内存地址
+	//for i:=0;i<count;i++{
+		//讲数组中每个元素的地址依次赋值给指针数组的每个元素
+	//	ptr[i]=&a[i] //&表示将数组的值转换为它的地址取出来给ptr
+	//}
+	//fmt.Printf("%T,%v\n",ptr,ptr)
+	//fmt.Println(ptr[0])
+	//根据指针数组元素的每个地址,获取该地址指向元素的真实数值
+	for i:=0;i<count;i++{
+		ptr[i]=&a[i]
+		fmt.Println(*ptr[i])
+	}
+	for _,value:=range ptr{
+		fmt.Println(*value)
+	}
+
+
+}
+指针的指针
+package main
+import "fmt"
+func main() {
+	var a int
+	var ptr *int
+	var pptr **int
+	a=123
+	//为指针赋值
+	ptr=&a
+	fmt.Println("ptr:",ptr)
+	pptr=&ptr
+	fmt.Println("pptr",pptr)
+	fmt.Printf("变量a=%d\n",a) //生成最初的指针地址
+	fmt.Printf("变量*ptr=%d\n",*ptr) //指向a的地址
+	fmt.Printf("指向到指针的变量**ppter=%d\n",**pptr) //指向ptr最终查找到a的地址返回其值
+}
+总结:指针的指针相当于windows中的快捷键中的文件夹 然后一级级查找
+
+
+函数的参数传递
+值传递:是指在调用函数时将实际参数复制一份传递到函数中,这样在函数中如果对参数进行修改,将不会影响到原内容数据
+引用传递:是指在调用时将实际参数的地址传递到函数中 那么在函数中对参数所进行修改 将影响到原内容数据
+package main
+import "fmt"
+func main(){
+	a:=10
+	fmt.Printf("1.变量a的内存地址%p值为%v\n\n",&a,a)
+	//传值
+	changeIntVal(a)
+	fmt.Printf("2.changeintval函数调用后:变量a的内存地址:%p,值为:%v\n\n",&a,a) //传值的时候不做修改
+	changeIntptr(&a)
+	fmt.Printf("2.changeintptr函数调用后:变量a的内存地址:%p,值为:%v\n\n",&a,a) //这里输出的是赋值之后的值
+}
+func changeIntVal(a int)  {
+	fmt.Printf("-----changeIntVal函数内:值参数a的内存地址:%p值为%v\n",&a,a)
+	a=90
+}
+func changeIntptr(a *int)  {
+	fmt.Printf("-----changeIntptr函数内:指针参数a的内存地址:%p值为%v\n",&a,a) //复制的是参数地址 这个地址对应的是a的值
+	*a=50 //对于该地址的值进行重新赋值
+}
+
+string的值的传递
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+func main(){
+	a:="abcd"
+	fmt.Printf("1.变量a的内存地址%p值为%v\n\n",&a,a)//abcd
+	//传值
+	changestringval(a)
+	fmt.Printf("2.changeintval函数调用后:变量a的内存地址:%p,值为:%v\n\n",&a,a) //传值的时候不做修改abcd
+	changestringptr(&a)//穿指针参数 模仿传引用 go语言中没有直接传引用的说法
+	fmt.Printf("2.changeintptr函数调用后:变量a的内存地址:%p,值为:%v\n\n",&a,a) //这里输出的是赋值之后的值ABCD
+}
+func changestringval(a string)  {
+	fmt.Printf("-----changeIntVal函数内:值参数a的内存地址:%p值为%v\n",&a,a)//abcd
+	a=strings.ToUpper(a) //将a的值大写
+}
+func changestringptr(a *string)  {
+	fmt.Printf("-----changeIntptr函数内:指针参数a的内存地址:%p值为%v\n",&a,a) //复制的是参数地址 这个地址对应的是a的值
+	*a=strings.ToUpper(*a) //将a的值大写 //对于该地址的值进行重新赋值
+}
+
+传递数组:
+package main
+import (
+	"fmt"
+)
+func main(){
+	a:=[4]int{1,2,3,4}
+	fmt.Printf("1.变量a的内存地址%p值为%v\n\n",&a,a)//{1,2,3,4}
+	//传值
+	changearratval(a)
+	fmt.Printf("2.changearrval函数调用后:变量a的内存地址:%p,值为:%v\n\n",&a,a) //传值的时候不做修改//{1,2,3,4}
+	changearraptr(&a)//穿指针参数 模仿传引用 go语言中没有直接传引用的说法
+	fmt.Printf("2.changearrptr函数调用后:变量a的内存地址:%p,值为:%v\n\n",&a,a) //这里输出的是赋值之后的值//{1,250,3,4}
+}
+func changearratval(a [4]int)  {
+	fmt.Printf("-----changearrVal函数内:值参数a的内存地址:%p值为%v\n",&a,a)//{1,2,3,4}
+	a[0]=99 //将a的值大写
+}
+func changearraptr(a *[4]int)  {
+	fmt.Printf("-----changearrptr函数内:指针参数a的内存地址:%p值为%v\n",&a,a) //复制的是参数地址 这个地址对应的是a的值
+	(*a)[1]=250 //将a的值大写 //对于该地址的值进行重新赋值
+}
+
+
+传递引用类型数据
+go语言中所有的传参都是值传递都是一个副本  一个拷贝
+拷贝的内容有时候是非引用类型 (int string bool 数组 struct属于非引用类型) 这样就在函数中就无法修改原内容数据;
+有的是引用类型(指针 slice map channl属于引用类型) 这样就可以修改原内容数据
+是否可以修改原内容数据 传值 传引用没有必然的关系 在c++中传引用肯定是可以修改原内容数据的
+在go语言中 虽然只有传值 但是我们也可以修改原内容数据 因为参数可以是引用类型
+struct传指针
+package main
+import (
+	"fmt"
+)
+type Teacher struct {
+	name string
+	age  int
+	married bool
+	sex   int8
+}
+func main(){
+	a:=Teacher{"steven",35,true,1}
+	fmt.Printf("1.变量a的内存地址%p值为%v\n\n",&a,a)//
+	//传值
+	changestructval(a)
+	fmt.Printf("2.changestructval函数调用后:变量a的内存地址:%p,值为:%v\n\n",&a,a) //传值的时候不做修改//
+	changestructptr(&a)//穿指针参数 模仿传引用 go语言中没有直接传引用的说法
+	fmt.Printf("2.changestructptr函数调用后:变量a的内存地址:%p,值为:%v\n\n",&a,a) //这里输出的是赋值之后的值
+}
+func changestructval(a Teacher)  {
+	fmt.Printf("-----changestructval函数内:值参数a的内存地址:%p值为%v\n",&a,a)//
+	a.name="josh" //对于struct的修改只能如此修改
+	a.age=90
+	a.married=false
+	a.sex=0
+}
+func changestructptr(a *Teacher)  {
+	fmt.Printf("-----changestructptr函数内:指针参数a的内存地址:%p值为%v\n",&a,a) //复制的是参数地址 这个地址对应的是a的值
+	a.name="Daniel"
+	a.age=90
+	a.married=false
+	a.sex=0
+}
+
+数组的声明和变量
+基本数据类型:整型 浮点型 布尔型 字符串 字符 (byte rune)
+复合数据类型: 函数与指针 数组 切片 map list 结构体 通道 
+package main
+import "fmt"
+var arr [4] int
+var arr2=[4]int{1,2,3,4}
+func main()  {
+	a:=[4]float64{2.3,4,5,6.1}
+	fmt.Println(a)
+	b:=[...]int{2,3,4}
+	//遍历数组的方式1
+	for i:=0;i<len(a);i++{
+		fmt.Print(a[i],"\t")
+	}
+	//遍历数组的方式2
+	for _,value:=range b{
+		fmt.Print(value,"\t\n") //\t是制表符给与空格
+	}
+	//if arr==nil{
+	//	fmt.Println("arr==nil")
+	//}
+	fmt.Println("遍历arr数组\n")
+	for _,value:=range arr{
+		fmt.Print(value,"\t")
+	}
+}
+数组没有初始化是0或者是空字符串没有nil一说
+遍历一个二维数组
+package main
+import "fmt"
+func main()  {
+	count:=0
+	var a=[5][3]int{{1,2,3},{4,5,6},{7,8,9},{2,3,4},{0,1,2}}
+	fmt.Println(a)
+	for i:=0;i<len(a);i++{
+		for j:=0;j<len(a[0]);j++{
+			fmt.Printf("a[%d][%d]=%d\n",i,j,a[i][j])
+			count++
+		}
+	}
+	fmt.Println(count)
+}
+
+总结:对于数组来说它是一个值引用类型 所以不会改变原来的数组的值
+
+切片的声明
+与数组相比切片的长度是固定的 可以追加元素 在追加时可能使切片的容量增大
+切片本身没有任何数据 他们只是对现有数组的引用
+切片与数组相比 不需要设定长度 在[]中不用设定值 相对来说比较自由
+从概念上面来说slice像一个结构体 这个结构体包含了三个元素:
+指针 指向数组中slice指定的开始位置
+长度,即slice的长度
+最大长度 也就是slice开始位置到数组的最后位置的长度
+package main
+import "fmt"
+//声明方式一:
+var s1 []int
+//声明方式2
+var s2 []int =make([]int,5)
+var s3 []int=make([]int,5,7) //7是cap的值不写默认和len一样
+func main()  {
+	//声明切片的方式2.2
+	s4:= make([]int,5)
+	s5:= make([]int,5,7)
+	printsliceMsg(s1)
+	printsliceMsg(s2)
+	printsliceMsg(s3)
+	printsliceMsg(s4)
+	printsliceMsg(s5)
+}
+func printsliceMsg(x []int){
+	fmt.Printf("len=%d,cap=%d,slice=%v\n",len(x),cap(x),x)
+	if s1==nil{
+		fmt.Println("s1==nil","len(s1)=",len(s1))
+	}
+}
+
+
+package main
+import (
+	"fmt"
+)
+//声明方式一:
+var s1 []int
+//声明方式2
+var s2 []int = make([]int, 5)
+var s3 []int = make([]int, 5, 7) //7是cap的值不写默认和len一样
+func main() {
+	//声明切片的方式2.2
+	s4 := make([]int, 5)
+	s5 := make([]int, 5, 7)
+	s6 := make([]int,0)
+	printsliceMsg(s1)
+	printsliceMsg(s2)
+	printsliceMsg(s3)
+	printsliceMsg(s4)
+	printsliceMsg(s5)
+	printsliceMsg(s5)
+	printsliceMsg(s6)
+	if s1 == nil {
+		fmt.Println("s1==nil", "len(s1)=", len(s1))
+	}
+	if s6==nil{
+		fmt.Println("s6==nil", "len(s6)=", len(s6))
+	} else {
+		fmt.Println("s6!=nil", "len(s6)=", len(s6))
+	}
+
+}
+func printsliceMsg(x []int) {
+	fmt.Printf("len=%d,cap=%d,slice=%v\n", len(x), cap(x), x)
+}
+
+小结:只有s1这种方式定义的切片才是空指针 所有经过make格式化过的切片都不是空指针
+
+切片的长度是切片所有元素的个数的总和
+切片的容量是切片中指向数组的元素的总和 也就是说容量的总和是数组的最大元素的个数 但是是从第一个切片的指针开始
+切片实际就是一个容器 装的是数组的元素 但是你要多少它就给多少
+
+我们修改了切片的底层的元素之后在其他切片在调用该数组的时候元素也随之改变
+数组是值类型 每次都是拷贝
+切片是引用类型 拷贝的是地址
+
+切片中的append
+package main
+import (
+	"fmt"
+)
+func main()  {
+	fmt.Println("1.---------------------------------")
+	var numbers []int
+	printslice("numbers:",numbers)
+	numbers=append(numbers,0)
+	printslice("numbers:",numbers)
+	numbers=append(numbers,1,2,3,4,5,6,7)
+	printslice("numbers:",numbers)
+	s1:=[]int{100,200,300,400}
+	numbers=append(numbers,s1...)
+	printslice("numbers:",numbers)
+	fmt.Println("2.---------------------------------")
+	//切片删除
+	//删除第一个
+	numbers=numbers[1:]
+	printslice("numbers:",numbers)
+	//删除最后一个
+	numbers=numbers[:len(numbers)-1]
+	printslice("numbers",numbers)
+	//删除中间一个
+	a:=int(len(numbers)/2)
+	fmt.Println("中间下标",a)
+	numbers=append(numbers[:a],numbers[a+1:]...)
+	printslice("numbers:",numbers)
+	fmt.Println("3.---------------------")
+	//创建的目标切片
+	numbers1:=make([]int,len(numbers),cap(numbers)*2)
+	//拷贝numbers的元素拷贝到number1中
+	count:=copy(numbers1,numbers)
+	fmt.Println("拷贝的个数:",count)
+	printslice("numbers1",numbers1)
+	//拷贝的两个切片是否有关联
+	numbers[0]=99
+	numbers1[len(numbers1)-1]=100
+	printslice("numbers",numbers)
+	printslice("numbers1",numbers1)//改变其中一个切片并不会影响原来的切片 也就是说copy函数并不会将两个切片指向同一个数组
+}
+func printslice(name string,x []int)  {
+	fmt.Print(name,"\t")
+	fmt.Printf("地址:%p\t len=%d \t cap=%d \t value=%v \n",x,len(x),cap(x),x) //p表示地址
+}
+
+切片的优化
+package main
+import (
+	"fmt"
+	"strconv"
+)
+func main()  {
+	//var sa[]string
+	sa:=make([]string,0,20)  //指定长度为0，cap不写 推荐在知道的情况下用这种节省内存空间***
+	for i:=0;i<15;i++{
+		sa=append(sa,strconv.Itoa(i)) //strconv是讲Int转换成string的方式给sa追加进去
+		printslicedata(sa)
+	}
+	printslicedata(sa)
+}
+func printslicedata(sa []string)  {
+	fmt.Printf("地址:%p \t len:%d \t cap:%d \t value:%v\n",sa,len(sa),cap(sa),sa)
+}
+
+
+
+冒泡优化处理
+冒泡排序是一种计算机科学领域的较简单的排序算法
+比较相领的元素 如果第一个比第二个大 就交换他们两个
+package main
+import "fmt"
+func main()  {
+	//arr := []int{5, 4, 3, 2, 1}
+	arr:=[]int{2,4,56,6,7,32,2,21,13,9}
+	Bubblesortaaa(arr)
+	fmt.Println(arr)
+}
+func Bubblesortaaa(arr []int)  {
+	icount:=0 //记录外部循环
+	jcount:=0 //记录内部循环
+	//双层for循环实现排序
+	//定义一个标记,判断本轮是否有两两换位,如果没有的话则跳出循环
+	flag:=true
+	for i:=0;i<len(arr)-1 ;i++  {
+		for j:=0;j<len(arr)-1-i;j++{
+			if arr[j]>arr[j+1]{
+				arr[j],arr[j+1]=arr[j+1],arr[j]
+				flag=false
+			}
+			jcount++
+		}
+		icount++
+		if flag{
+			break
+		}
+	}
+	fmt.Println("i循环的次数:",icount)
+	fmt.Println("j循环的次数:",jcount)
+}
+
+https://studygolang/pkgdoc go语言标准库
+腾讯云开发者手册
+https://cloud.tencent.com/developer/section/1144338
+
+字符串处理函数
+package main
+import (
+	"fmt"
+	"unicode/utf8"
+)
+func main() {
+	s:="我爱Go语言"
+	fmt.Println("字节长度",len(s))
+	fmt.Println("---------------")
+	//获取字符串的引用
+	for i,ch:=range s  { //s输出的时候是下标和值一起输出的
+		fmt.Printf("%d:%c\n",i,ch)
+	}
+	fmt.Println("---------------")
+	for i,ch:=range []byte(s){
+		fmt.Printf("%d:%x \n",i,ch)
+	}
+	fmt.Println("---------------")
+	//遍历所有的字符
+	for i,ch:=range []rune(s){
+		fmt.Printf("%d:%c \n",i,ch)
+	}
+	fmt.Println("字符串长度",utf8.RuneCountInString(s))
+	fmt.Println("---------------")
+}
+
+
+
+https://studygolang.com/pkgdoc go语言中文网
+Contains   检索字符串 判断字符串s是否包含substr字符串
+ContainsAny  
+Count
+EqualFold
+Fields
+FieldsFunc
+Index
+IndexAny
+IndexFunc
+IndexRune
+Join
+LastIndex
+Map
+NewReplacer
+Repeat
+Replace
+Split
+SplitAfter
+SplitAfterN
+SplitN
+Title
+ToLower
+ToTitle
+ToUpper
+Trim
+TrimPrefix
+TrimSpace
+TrimSuffix
+func EqualFold
+func EqualFold(s, t string) bool
+判断两个utf-8编码字符串（将unicode大写、小写、标题三种格式字符视为相同）是否相同。
+
+Example
+func HasPrefix
+func HasPrefix(s, prefix string) bool
+判断s是否有前缀字符串prefix。
+
+func HasSuffix
+func HasSuffix(s, suffix string) bool
+判断s是否有后缀字符串suffix。
+
+func Contains
+func Contains(s, substr string) bool
+判断字符串s是否包含子串substr。
+
+Example
+func ContainsRune
+func ContainsRune(s string, r rune) bool
+判断字符串s是否包含utf-8码值r。
+
+func ContainsAny
+func ContainsAny(s, chars string) bool
+判断字符串s是否包含字符串chars中的任一字符。
+
+Example
+func Count
+func Count(s, sep string) int
+返回字符串s中有几个不重复的sep子串。
+
+Example
+func Index
+func Index(s, sep string) int
+子串sep在字符串s中第一次出现的位置，不存在则返回-1。
+
+Example
+func IndexByte
+func IndexByte(s string, c byte) int
+字符c在s中第一次出现的位置，不存在则返回-1。
+
+func IndexRune
+func IndexRune(s string, r rune) int
+unicode码值r在s中第一次出现的位置，不存在则返回-1。
+
+Example
+func IndexAny
+func IndexAny(s, chars string) int
+字符串chars中的任一utf-8码值在s中第一次出现的位置，如果不存在或者chars为空字符串则返回-1。
+
+Example
+func IndexFunc
+func IndexFunc(s string, f func(rune) bool) int
+s中第一个满足函数f的位置i（该处的utf-8码值r满足f(r)==true），不存在则返回-1。
+
+Example
+func LastIndex
+func LastIndex(s, sep string) int
+子串sep在字符串s中最后一次出现的位置，不存在则返回-1。
+
+Example
+func LastIndexAny
+func LastIndexAny(s, chars string) int
+字符串chars中的任一utf-8码值在s中最后一次出现的位置，如不存在或者chars为空字符串则返回-1。
+
+func LastIndexFunc
+func LastIndexFunc(s string, f func(rune) bool) int
+s中最后一个满足函数f的unicode码值的位置i，不存在则返回-1。
+
+func Title
+func Title(s string) string
+返回s中每个单词的首字母都改为标题格式的字符串拷贝。
+
+BUG: Title用于划分单词的规则不能很好的处理Unicode标点符号。
+
+Example
+func ToLower
+func ToLower(s string) string
+返回将所有字母都转为对应的小写版本的拷贝。
+
+Example
+func ToLowerSpecial
+func ToLowerSpecial(_case unicode.SpecialCase, s string) string
+使用_case规定的字符映射，返回将所有字母都转为对应的小写版本的拷贝。
+
+func ToUpper
+func ToUpper(s string) string
+返回将所有字母都转为对应的大写版本的拷贝。
+
+Example
+func ToUpperSpecial
+func ToUpperSpecial(_case unicode.SpecialCase, s string) string
+使用_case规定的字符映射，返回将所有字母都转为对应的大写版本的拷贝。
+
+func ToTitle
+func ToTitle(s string) string
+返回将所有字母都转为对应的标题版本的拷贝。
+
+Example
+func ToTitleSpecial
+func ToTitleSpecial(_case unicode.SpecialCase, s string) string
+使用_case规定的字符映射，返回将所有字母都转为对应的标题版本的拷贝。
+
+func Repeat
+func Repeat(s string, count int) string
+返回count个s串联的字符串。
+
+Example
+func Replace
+func Replace(s, old, new string, n int) string
+返回将s中前n个不重叠old子串都替换为new的新字符串，如果n<0会替换所有old子串。
+
+Example
+func Map
+func Map(mapping func(rune) rune, s string) string
+将s的每一个unicode码值r都替换为mapping(r)，返回这些新码值组成的字符串拷贝。如果mapping返回一个负值，将会丢弃该码值而不会被替换。（返回值中对应位置将没有码值）
+
+Example
+func Trim
+func Trim(s string, cutset string) string
+返回将s前后端所有cutset包含的utf-8码值都去掉的字符串。
+
+Example
+func TrimSpace
+func TrimSpace(s string) string
+返回将s前后端所有空白（unicode.IsSpace指定）都去掉的字符串。
+
+Example
+func TrimFunc
+func TrimFunc(s string, f func(rune) bool) string
+返回将s前后端所有满足f的unicode码值都去掉的字符串。
+
+func TrimLeft
+func TrimLeft(s string, cutset string) string
+返回将s前端所有cutset包含的utf-8码值都去掉的字符串。
+
+func TrimLeftFunc
+func TrimLeftFunc(s string, f func(rune) bool) string
+返回将s前端所有满足f的unicode码值都去掉的字符串。
+
+func TrimPrefix
+func TrimPrefix(s, prefix string) string
+返回去除s可能的前缀prefix的字符串。
+
+Example
+func TrimRight
+func TrimRight(s string, cutset string) string
+返回将s后端所有cutset包含的utf-8码值都去掉的字符串。
+
+func TrimRightFunc
+func TrimRightFunc(s string, f func(rune) bool) string
+返回将s后端所有满足f的unicode码值都去掉的字符串。
+
+func TrimSuffix
+func TrimSuffix(s, suffix string) string
+返回去除s可能的后缀suffix的字符串。
+
+Example
+func Fields
+func Fields(s string) []string
+返回将字符串按照空白（unicode.IsSpace确定，可以是一到多个连续的空白字符）分割的多个字符串。如果字符串全部是空白或者是空字符串的话，会返回空切片。
+
+Example
+func FieldsFunc
+func FieldsFunc(s string, f func(rune) bool) []string
+类似Fields，但使用函数f来确定分割符（满足f的unicode码值）。如果字符串全部是分隔符或者是空字符串的话，会返回空切片。
+
+Example
+func Split
+func Split(s, sep string) []string
+用去掉s中出现的sep的方式进行分割，会分割到结尾，并返回生成的所有片段组成的切片（每一个sep都会进行一次切割，即使两个sep相邻，也会进行两次切割）。如果sep为空字符，Split会将s切分成每一个unicode码值一个字符串。
+
+Example
+func SplitN
+func SplitN(s, sep string, n int) []string
+用去掉s中出现的sep的方式进行分割，会分割到结尾，并返回生成的所有片段组成的切片（每一个sep都会进行一次切割，即使两个sep相邻，也会进行两次切割）。如果sep为空字符，Split会将s切分成每一个unicode码值一个字符串。参数n决定返回的切片的数目：
+
+n > 0 : 返回的切片最多n个子字符串；最后一个子字符串包含未进行切割的部分。
+n == 0: 返回nil
+n < 0 : 返回所有的子字符串组成的切片
+Example
+func SplitAfter
+func SplitAfter(s, sep string) []string
+用从s中出现的sep后面切断的方式进行分割，会分割到结尾，并返回生成的所有片段组成的切片（每一个sep都会进行一次切割，即使两个sep相邻，也会进行两次切割）。如果sep为空字符，Split会将s切分成每一个unicode码值一个字符串。
+
+Example
+func SplitAfterN
+func SplitAfterN(s, sep string, n int) []string
+用从s中出现的sep后面切断的方式进行分割，会分割到结尾，并返回生成的所有片段组成的切片（每一个sep都会进行一次切割，即使两个sep相邻，也会进行两次切割）。如果sep为空字符，Split会将s切分成每一个unicode码值一个字符串。参数n决定返回的切片的数目：
+
+n > 0 : 返回的切片最多n个子字符串；最后一个子字符串包含未进行切割的部分。
+n == 0: 返回nil
+n < 0 : 返回所有的子字符串组成的切
+Example
+func Join
+func Join(a []string, sep string) string
+将一系列字符串连接为一个字符串，之间用sep来分隔。
+
+Example
+type Reader
+type Reader struct {
+    // 内含隐藏或非导出字段
+}
+Reader类型通过从一个字符串读取数据，实现了io.Reader、io.Seeker、io.ReaderAt、io.WriterTo、io.ByteScanner、io.RuneScanner接口。
+
+func NewReader
+func NewReader(s string) *Reader
+NewReader创建一个从s读取数据的Reader。本函数类似bytes.NewBufferString，但是更有效率，且为只读的。
+
+func (*Reader) Len
+func (r *Reader) Len() int
+Len返回r包含的字符串还没有被读取的部分。
+
+func (*Reader) Read
+func (r *Reader) Read(b []byte) (n int, err error)
+func (*Reader) ReadByte
+func (r *Reader) ReadByte() (b byte, err error)
+func (*Reader) UnreadByte
+func (r *Reader) UnreadByte() error
+func (*Reader) ReadRune
+func (r *Reader) ReadRune() (ch rune, size int, err error)
+func (*Reader) UnreadRune
+func (r *Reader) UnreadRune() error
+func (*Reader) Seek
+func (r *Reader) Seek(offset int64, whence int) (int64, error)
+Seek实现了io.Seeker接口。
+
+func (*Reader) ReadAt
+func (r *Reader) ReadAt(b []byte, off int64) (n int, err error)
+func (*Reader) WriteTo
+func (r *Reader) WriteTo(w io.Writer) (n int64, err error)
+WriteTo实现了io.WriterTo接口。
+
+type Replacer
+type Replacer struct {
+    // 内含隐藏或非导出字段
+}
+Replacer类型进行一系列字符串的替换。
+
+func NewReplacer
+func NewReplacer(oldnew ...string) *Replacer
+使用提供的多组old、new字符串对创建并返回一个*Replacer。替换是依次进行的，匹配时不会重叠。
+
+Example
+func (*Replacer) Replace
+func (r *Replacer) Replace(s string) string
+Replace返回s的所有替换进行完后的拷贝。
+
+func (*Replacer) WriteString
+func (r *Replacer) WriteString(w io.Writer, s string) (n int, err error)
+WriteString向w中写入s的所有替换进行完后的拷贝。
+
+Contains()//判断第一个字符串中是否包含有第二个子字符串返回一个bool值
+ContainsAny //是否包含第二个字符串中的任意字符
+
+
+基础字符串处理的函数
+package main
+import (
+	"fmt"
+	"strings"
+	"unicode"
+)
+func main() {
+	TestContains()
+	testContainsAny()
+	testContainsRune()
+	testcount()
+	testHasprefix()
+	testhassuffix()
+	testindex()
+	testindexany()
+	testindexbyte()
+	testindexrune()
+	testindexfunc()
+	testlastindex()
+	testlastindexany()
+	testlastindexbyte()
+	testlastindexfunc()
+}
+func TestContains()  {//测试后面的字符在没在前面的字符串中
+	fmt.Println(strings.Contains("seafood","foo"))
+	fmt.Println(strings.Contains("seafood","bar"))
+	fmt.Println(strings.Contains("seafood",""))
+	fmt.Println(strings.Contains("",""))
+	fmt.Println(strings.Contains("steven王2019","王"))
+}
+func testContainsAny(){
+	fmt.Println(strings.ContainsAny("team","i"))
+	fmt.Println(strings.ContainsAny("failure","u&i"))
+	fmt.Println(strings.ContainsAny("foo","")) //这个不包含是contaiany的特性
+	fmt.Println(strings.ContainsAny("",""))
+}
+func testContainsRune(){ //一个字符串中是否包含一个字符
+	fmt.Println(strings.ContainsRune("一丁丂",19969)) //根据uintcon8判断
+}
+
+func testcount(){
+	fmt.Println(strings.Count("cheese","e"))//字符串s包含子字符串的个数
+	fmt.Println(strings.Count("one",""))
+}
+func testHasprefix()  {  //一个字符串是否以后字符串为起始
+	fmt.Println(strings.HasPrefix("1000phones","1000"))
+	fmt.Println(strings.HasPrefix("100pje","new"))
+}
+func testhassuffix()  { //一个字符串是否以后子字符为后缀
+	fmt.Println(strings.HasSuffix("1000phone news","news"))
+	fmt.Println(strings.HasSuffix("1000phone news","new"))
+}
+func testindex(){ //判断是从第一个索引开始出现后面的字符
+	fmt.Println(strings.Index("1000phonenews","news"))
+	fmt.Println(strings.Index("1000phonenews","a"))
+}
+func testindexany(){//判断后面的子字符出现的任意字符在前面的首次出现的位置
+	fmt.Println(strings.IndexAny("abcAbc120","教育基地A"))
+}
+func testindexbyte()  {//判断后面的子字符出现的任意字符在前面的首次出现的位置
+	fmt.Println(strings.IndexRune("abcABC120",'C'))
+}
+func testindexrune()  {//判断后面的子字符出现的任意字符在前面的首次出现的位置
+	fmt.Println(strings.IndexRune("abcABC12",'C'))
+}
+func testindexfunc()  { //判断首次出现汉子是第一个下标
+	f:= func(c rune) bool{
+		return unicode.Is(unicode.Han,c)
+	}
+	fmt.Println(strings.IndexFunc("hello123中国",f))
+}
+func testlastindex()  {//后面字符出现的最后一个位置
+	fmt.Println(strings.LastIndex("stende lean english","e"))
+
+}
+func testlastindexany()  { //任意出现第二个字符的最后一个字符的位置
+	fmt.Println(strings.IndexAny("chicken","aeiouy"))
+
+}
+func testlastindexbyte()  {//倒着数A在前面出现的首次的次数
+	fmt.Println(strings.LastIndexByte("abcABCA123",'A'))
+}
+func testlastindexfunc()  {//从右到左第一次出现汉字的位置
+	f:= func(c rune) bool{
+		return unicode.Is(unicode.Han,c)
+	}
+	fmt.Println(strings.LastIndexFunc("hello123中国我们",f))
+}
+
+strconv函数
+package main
+import (
+	"fmt"
+	"strconv"
+)
+func main() {
+	testatoi()
+	testaint()
+	testparsefloat()
+	testparsebool()
+}
+func testatoi()  {
+	a,_:=strconv.Atoi("100") //将字符串100转换成int
+	fmt.Printf("%T,%v\n",a,a+2)
+	fmt.Println("--------")
+}
+func testaint(){
+	num,_:=strconv.ParseInt("4e00",16,64)//将什么类型的转换成int
+	fmt.Printf("%T,%v\n",num,num)
+}
+func testparsefloat()  { //将字符串转换成float型也就是数值型
+	pi:="3.1415926"
+	num,_:=strconv.ParseFloat(pi,64)
+	fmt.Printf("%T,%v\n",num,num*2)
+}
+func testparsebool()  { //将字符串转成bool型
+	flag,_:=strconv.ParseBool("t")
+	fmt.Printf("%T,%v",flag,flag)
+}
+
+
+format函数
+package main
+import (
+	"fmt"
+	"strconv"
+)
+
+func main() {
+	testitoa()
+	testformatint()
+	testformatfloat()
+	testformatbool()
+}
+func testitoa()  {
+	s:=strconv.Itoa(199)
+	fmt.Printf("%T,%v,长度:%d\n",s,s,len(s))
+}
+func testformatint()  {
+	s:=strconv.FormatInt(19968,16) //将十进制转换成16进制4e00
+	s=strconv.FormatInt(-40869,16)//9fa5最后一个中国子在uncode中
+	fmt.Printf("%T,%v,长度:%d\n",s,s,len(s))
+	s=strconv.FormatUint(40869,16)
+	fmt.Printf("%T,%v,长度:%d\n",s,s,len(s))
+}
+func testformatfloat() { //将float转换成String
+	s:=strconv.FormatFloat(3.01455,'f',-1,64)
+	fmt.Printf("%T,%v,长度:%d\n",s,s,len(s))
+}
+func testformatbool()  { //将bool转换成string
+	s:=strconv.FormatBool(true)
+	s=strconv.FormatBool(false)
+	fmt.Printf("%T,%v,长度:%d\n",s,s,len(s))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

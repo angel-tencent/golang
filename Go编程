@@ -1,0 +1,1602 @@
+C:\Users\Ender\go\src\awesomeProject  
+
+package main //使用package关键字定义包
+import "fmt" //导入打印需要用到的系统包:fmt
+//调用系统包fmt中的println方法打印字符串
+func main(){
+	fmt.Println("hello world")
+}
+
+
+package main
+import "fmt"
+func main()  {
+	fmt.Println("2,hello world")
+	fmt.Print("1.hello world\n")
+	fmt.println("3.hello world")
+}
+
+
+package main
+import "fmt"
+func main()  {
+	fmt.Println("2,hello world")
+	fmt.Print("1.hello world\n")
+	fmt.Println("3.hello world")
+}
+
+构建并运行
+go build:编译指定的源文件或代码包以及依赖包
+go install: 安装自身包和依赖包
+go run 编译并运行go程序
+vscode插件 code runner
+goland ide
+
+每个golang程序都有一个main入口函数
+package main
+import "fmt"
+var c1,c2=6,"golang"
+var (
+	d1=5
+	d2="go"
+)
+func varInitvalue() {
+	var a,b int=3,4
+	fmt.Println(a,b)
+	var s string="abcd"
+	fmt.Print(s)
+	var s1,s2,s3=5,"hello", true
+	fmt.Println(s1,s2,s3)
+	s4,s5,s6:=5,"world",false
+	fmt.Println(s4,s5,s6)
+}
+func main()  {
+	var a int
+	var b string
+	fmt.Printf("%d %q\n",a,b) //%d整型 %q空字符串
+	varInitvalue()
+	fmt.Println(c1,c2)
+	fmt.Println(d1,d2)
+}
+
+
+变量类型
+1.go语言不允许隐式类型转换 只能强制转换
+2.go语言中不支持指针运算
+bool
+string
+int int8 int16 int32 int64
+byte rune
+float32 float64 complex64 complex128
+
+
+系统内置变量类型：
+
+bool
+string
+(u)int、(u)int8、(u)int16、(u)int32、(u)int64、uintptr
+byte(uint8)、rune(int32 unicode)
+float32、float64、complex64、complex128
+Go语言不允许隐式类型转换，只能强制转换；Go语言中不支持指针运算。
+
+package main
+import (
+	"fmt"
+	"math"
+	"runtime"
+	"strconv"
+)
+func main()  {
+	var a int=1
+	var b int32
+	b=int32(a)
+	fmt.Printf("%T %T %T\n",a,b) //T表示类型
+	cpuArch :=runtime.GOARCH
+	intSize :=strconv.IntSize
+	fmt.Println(cpuArch,intSize)
+	var f1 float32
+	var f2 float64
+	fmt.Printf("%f %f\n",f1,f2)
+	var bt byte =2
+	var ru rune = '中'
+	fmt.Printf("%T %T\n",bt,ru)
+
+	var a1,a2=3,4
+	var c int
+	temp  :=a1*a2 + a2*a2
+	fmt.Printf("%T\n",temp)
+	c=int(math.Sqrt(float64(temp)))
+	fmt.Printf("%T %d",c,c)
+}
+
+常量 枚举 变量定义与别名
+
+常量：
+
+const s string = "Hello"
+const a, b = 3, 4
+const (
+    s1  = "golang"
+    c   = 5
+    MAX = 10
+)
+不指定类型的常量，则它的类型是不确定的,可以当作各种类型使用。
+
+枚举：
+
+const (
+    Monday = 1 + iota
+    Tuesday
+    Wednesday
+    Thursday
+    Friday
+    Staurday
+    Sunday
+)
+枚举是一种特殊的常量，可以通过iota快速设置连续的值
+
+类型定义与别名：
+
+type MyInt1 int
+type MyInt2 = int
+
+var i int = 1
+var i1 MyInt1 = MyInt1(i)
+var i2 MyInt2 = i
+类型定义基于类型创建的一个新类型，主要提高代码可读性；类型别名基于类型创建的一个别名，和原类型完全一样，主要用于包兼容；类型定义是一个新的类型了，所以类型转换的时候必须强制类型转换。
+package main
+import (
+	"fmt"
+	"math"
+)
+func constDemo(){
+	const s string="hello"
+	const a,b=3,4
+	fmt.Println(s,a,b)
+	var c int
+	c=int(math.Sqrt(a*a+b*b)) //求25的开平方sqrt默认是folat64的类型我们使用int强制类型转换
+	fmt.Println(c)
+	const(
+		s1="golang"
+		max=10
+	)
+	fmt.Println(s1,max)
+}
+func main()  {
+	constDemo()
+}
+枚举:只能出现一次
+package main
+import "fmt"
+func constDemo(){
+	const (
+		Monday = 1 + iota //1对于枚举类型的常量通常用iota来连续表示
+		Tuesday
+		Wednesday
+		Thursday
+		Friday
+		Staurday
+		Sunday
+	)
+	fmt.Println(Monday,Thursday,Friday,Sunday,Wednesday,Staurday,Tuesday)
+}
+func main()  {
+	constDemo()
+}
+
+类型定义与别名:
+package main
+import "fmt"
+func typeDefandalias(){
+	type Myint1 int //基于int定义的一个新的类型 这个用的比较多
+	type Myint2 = int //myint2和int就是完全一样的(别名)
+	var i int=1
+	var i1 Myint1=Myint1(i)
+	var i2 Myint2=i
+	fmt.Println(i1,i2)
+}
+func main()  {
+	typeDefandalias()
+}
+Go 语言内置的运算符有：
+算术运算符
+关系运算符
+逻辑运算符
+位运算符
+赋值运算符
+
+
+在格式化字符串里，%d 用于格式化整数（%x 和 %X 用于格式化 16 进制表示的数字），%g 用于格式化浮点型（%f 输出浮点数，%e 输出科学计数表示法），%0nd 用于规定输出长度为n的整数，其中开头的数字 0 是必须的 %s表示字符串
+package main 表示一个可独立执行的程序，每个 Go 应用程序都包含一个名为 main 的包。package main 包下可以有多个文件，但所有文件中只能有一个 main () 方法，main () 方法代表程序入口
+Go的关系运算符:
+==检查两个值是否相等 如果相等返回True 否则返回False   (A==B) 为False
+!= 检查两个值是否不相等,如果不相等返回True否则返回False (A!=B)为True
+> 检查左边值是否大于右边值 如果是返回True否则返回False  (A>B)为False
+< 检查左边值是否小于右边值 如果是返回True否则返回False (A<B)为True
+>=检查左边值是否大于等于右边值 如果是返回True否则返回False  (A>=B)为False
+<=检查左边值是否小于等于右边值 如果是返回True否则返回False  (A<=B)为True
+Go的逻辑运算符:
+&&逻辑AND运算符 如果两边的操作数都是True则条件True 否则为False (A&&B)为False 
+||逻辑OR运算符 如果两边的操作数都有一个True则条件True否则为False (A||B)为True
+!逻辑NOT运算符,如果条件为True 则逻辑NOT条件False否则为True   !(A&&B)为True
+位运算符
+p q  p&q p|q p^q 
+0  0  0   0   0
+0  1  0   1   1
+1  1  1   1   0
+1  0   0   1   1
+
+以a为60 b为13：
+& 按位与运算符"&"是双目运算符,其功能是参与运算的两数对应的二进位相与  (a&b)结果为12
+| 按位或运算符"|"是双目运算符.其功能是参与运算的两数各对应的二进位相或 
+^按位异或运算符"^" 是双目运算符 其功能是参与运算的两数各对应的二进位相异或 当两对应的二进位相异时结果为1
+<<左移运算符"<<"是双目运算符,左移n位就是乘以2的n次方,其功能把"<<"左边的运算数的各二进位全部左移若干位 由"<<"右边的数指定移动的位数 高位丢弃 低位补0
+>> 右移运算符">>"是双目运算符 右移n位就是除以2的n次方 其功能是把">>"左边的运算数的各二进位全部左移若干位 ">>"右边的数指定移动的位数
+
+
+
+= 使用必须使用先var声明例如
+:= (做字符串拼接使用):= 是声明并赋值，并且系统自动推断类型，不需要var关键字
+package main
+import "fmt"
+//算术运算符
+func operatorDemo()  {
+	var a int=21
+	var b int=10
+	var c int
+	c=a+b
+	fmt.Printf("a+b=%d\n",c)
+	c=a-b
+	a+=b //a=a+b //赋值运算符
+	fmt.Printf("a-b=%d\n",c)
+	c=a%b
+	fmt.Printf("a%b=%d\n",c)
+	c=a*b
+	fmt.Printf("a*b=%d\n",c)
+	c=a/b
+	fmt.Printf("a/b=%d\n",c)
+	a++ //a=a+1
+	fmt.Println("a++=%d",a)
+
+}
+//关系运算符
+func relationDemo()  {
+	var a int=21
+	var b int=10
+	if (a==b){
+		fmt.Println("a=b")
+	}else {
+		fmt.Println("a!=b")
+	}
+	if (a>b){
+		fmt.Println("a>b")
+	}else {
+		fmt.Println("a<=b")
+	}
+	a=5
+	if a<b{
+		fmt.Println("a<b")
+	}else {
+		fmt.Println("a>=b")
+	}
+}
+//逻辑运算符
+func logicDemo()  {
+	var a bool=true
+	var b bool=false
+	if a&&b {
+		fmt.Println("a和b都是真")
+	}else {
+		fmt.Println("a和b有假")
+	}
+	if a||b{  //或运算有一个为真则为真
+		fmt.Println("a和b至少有一个为真")
+	}else {
+		fmt.Println("a和b都为假")
+	}
+	if  !a { //a为真 非真即为假
+		fmt.Println("a为假")
+	}else {
+		fmt.Println("a为真")
+	}
+}
+//位运算符
+func bytecomputeDemo()  {
+	var a uint=60
+	fmt.Println("%b\n",a)
+	var b uint=13
+	fmt.Println("%b\n",b)
+	var c uint
+	c=a&b
+	fmt.Println("a&b=%d",c)
+	c=a|b
+	fmt.Println("a|b=%d",c)
+	c=a^b
+	fmt.Println("a^b=%d",c)
+	c=a<<2
+	fmt.Println("a<<2",c)
+	//左移60乘以4
+	c=a>>2
+	fmt.Println("a>>2",c)
+	//60除以4
+	//a>>=2  把a右移两位
+}
+func main(){
+	operatorDemo()
+	fmt.Println("--------")
+	relationDemo()
+	fmt.Println("---------")
+	logicDemo()
+	fmt.Println("--------")
+	bytecomputeDemo()
+}
+
+
+if 语句：
+
+if 布尔表达式 {
+    /* 在布尔表达式为 true 时执行 */
+}
+if 布尔表达式 {
+    /* 在布尔表达式为 true 时执行 */
+} else if 另外一个布尔表达式 {
+    /* 在布尔表达式为 true 时执行 */
+} else {
+    /* 在布尔表达式为 false 时执行 */
+}
+switch...case 语句：
+
+    switch {
+    case true:
+            fmt.Println("1、case 条件语句为 false”)
+            fallthrough
+    case false:
+            fmt.Println("2、case 条件语句为 false")
+    case true:
+            fmt.Println("3、case 条件语句为 true")
+    case true:
+            fmt.Println("4、case 条件语句为 true")
+    default:
+            fmt.Println(“5、默认 case”)
+    }
+匹配到的 case 后面不需要加 break，相当于默认就有 break；默认情况下 case 匹配成功后就不会执行其他 case，如果我们需要执行后面的 case，可以使用 fallthrough, fallthrough 不会判断下一条 case 的表达式结果是否为 true
+package main
+import "fmt"
+func main()  {
+	a :=50
+	b:=2
+	if a<20{ //true
+		fmt.Print("a<20")
+	}else if a==20 { //==才是判断的符号
+		fmt.Println("a=20")
+	}else {
+		fmt.Println("a>20")
+		if b>5{
+			fmt.Println("b>5")
+		}else {
+			fmt.Println("b<=5")
+		}
+	}
+	fmt.Println("---------")
+	switch a {
+	case 20:
+		fmt.Println("a=20")
+	case 21,23,50:
+		fmt.Println("a=50")
+	case 22:
+		fmt.Println("a=22")
+	default:
+		fmt.Println("Unknown")
+	}
+	switch  {
+	case a==20:
+		fmt.Println("a=20")
+	case a>20:
+		fmt.Println("a>20")
+		fallthrough //添加这个之后后面的一条语句还会继续执行
+	case a<20:
+		fmt.Println("a<20")
+	default:
+		fmt.Println("unkown")
+	}
+}
+
+循环语句:
+循环语句：
+
+sum := 0
+for i := 1; i <= 100; i++ {
+    sum += i
+}
+
+n := 0
+for n < 10 {
+    n++
+}
+
+for {
+    fmt.Println("dead loop")
+}
+for 语句不需要括号包裹起来；没有初始值，相当于 while 循环；没有初始值，没有循环条件，表示死循环
+
+循环控制语句：
+
+break语句：用于中断当前 for 循环
+continue语句：跳过当前循环的剩余语句，然后继续进行下一轮循环
+goto语句：将控制转移到被标记的语句
+
+package main
+import (
+	"fmt"
+)
+func main()  {
+	sum :=0
+	for i :=1;i<=100;i++{
+		sum+=i
+	}
+	fmt.Print(sum)
+	a:=15
+	b:=10
+	for a >=b{
+		b++
+		fmt.Println(b)
+	}
+	for a<20{
+		fmt.Printf("a=%d\n",a)
+		a++
+		if a>18{
+			break //当a大于18的时候直接跳出整个循环
+		}
+	}
+	fmt.Printf("-------------")
+	a=15
+	for a<20{
+		a++
+		if a==17{
+			continue //跳出当前循环走下次
+		}
+		fmt.Printf("a=%d\n",a)
+	}
+	fmt.Printf("--------")
+	a=10
+LOOP:
+	for a<20{
+		a++
+		if a==15{
+			goto LOOP //contiune作用一样
+		}
+		fmt.Printf("a=%d\n",a)
+	}
+}
+package main
+import "fmt"
+func main(){
+	for i :=1;i<=9;i++{
+		for k :=1;k<=i;k++{
+			fmt.Printf("%d*%d=%d ",i,k,i*k)
+		}
+		fmt.Println()
+	}
+}
+package main
+func main()  {
+	for i:=1;i<=25;i++{
+		for j :=1;j<=i;j++{
+			print("G")
+		}
+		println()
+	}
+}
+package main
+func main()  {
+	str := "G"
+	for i := 1; i <= 25; i++ {
+		println(str)
+		str += "G"
+	}
+}
+函数:
+函数的定义：
+
+func operate(a, b int, op string) int
+
+func swap(a, b int) (x, y int)
+
+func compute(op func(int, int) int, a, b int) int
+
+func sum(nums ...int) int
+函数的特性：
+
+函数返回值类型写在最后面
+函数可以返回多个值，也可以给返回值命名，一般和error结合使用
+函数式编程，函数也可以作为参数传递给其他函数
+go语言中没有默认参数，可选参数，但是可以使用可变参数列表
+package main
+import "fmt"
+func operate(a,b int,op string) int{
+	switch op {
+	case "+":
+		return a+b
+	case "-":
+		return a-b
+	case "*":
+		return a*b
+	case "/":
+		return a/b
+	default: //用panic终端执行并报错
+		panic(fmt.Sprint("not support operate:%s",op))
+	}
+} //定义一个函数operate 里面有三个参数a,b,op 返回一个int内类型的值
+func main(){
+     a,b :=10,5
+     fmt.Println(operate(a,b,"+"))
+}
+
+
+函数编程:
+package main
+import (
+	"fmt"
+	"math"
+	"os"
+)
+func operate(a,b int,op string) (int,error){
+	switch op {
+	case "+":
+		return a+b,nil
+	case "-":
+		return a-b,nil
+	case "*":
+		return a*b,nil
+	case "/":
+		return a/b,nil
+	default: //用panic终端执行并报错
+		return 0,fmt.Errorf("not support operate:%s",op)  //上面的error就是一种类型，表示error 下面就相当于构造成error类型返回
+	}  
+} //定义一个函数operate 里面有三个参数a,b,op 返回一个int内类型的值
+func swap(a ,b int) (int,int){ //给返回值定义类型为int
+	return b,a
+}
+func compute(op func(int,int)int,a,b int) int{ //func是函数类型的opleixing
+	return op(a,b)
+}
+func powInt(a,b int)int{
+	return int(math.Pow(float64(a),float64(b)))
+}
+
+type greeting func(name string) string
+
+func say(g greeting,word string)  {
+	fmt.Println(g(word))
+}
+func english(name string)string{
+	return "hello,"+name
+}
+func french(name string)string  {
+	return "Bonjuor,"+name
+}
+func china(name string)string{
+	return "你好"+name
+}
+func sum(nums...int) int{
+	s:=0
+	for i:=0;i<len(nums);i++{
+		s+=nums[i]
+	}
+	return s
+}
+func main(){
+     a,b :=10,5
+     if result,err :=operate(a,b,"x");err!=nil{
+     	fmt.Println(err.Error())
+	 }else {
+	 	fmt.Println(result)
+	 }
+     fmt.Println(swap(a,b))
+     file,err:=os.Open("abc.txt") //前面两个变量接受后面函数的返回值
+     if err  !=nil{
+     	fmt.Println("打开文件有误")
+	 }else {
+	 	fmt.Println(file)
+	 }
+	 fmt.Println(compute(powInt,3,4))
+     say(china,"world")
+     fmt.Println(sum(1,2,3))
+}
+
+
+
+将第一个与第三个返回值赋给了 i1 与 f1。第二个返回值赋给了空白符 _，然后自动丢弃掉。
+package main
+
+import "fmt"
+
+func main() {
+    var i1 int
+    var f1 float32
+    i1, _, f1 = ThreeValues()
+    fmt.Printf("The int: %d, the float: %f \n", i1, f1)
+}
+
+func ThreeValues() (int, int, float32) {
+    return 5, 6, 7.5
+}
+
+变量作用域:
+package main
+
+import "fmt"
+var g int=100 //全局变量
+//形式参数
+func sum(a,b int) int{
+	var c=10
+	s:=a+b+c+g
+	return s
+}
+func main(){
+	var a,b,c int
+	a=10
+	b=20
+	c=a+b+g
+	fmt.Println(a,b,c)
+	fmt.Println(sum(1,2))
+}
+
+
+局部变量:函数内定义的变量
+全局变量:函数外部定义的变量
+形式参数:函数定义中的变量
+
+指针:
+在go语言中只有值传递一种方式
+*int 定义指针
+int 定义值类型
+
+package main
+
+import "fmt"
+var g int=100 //全局变量
+//形式参数
+
+func sum(a,b int) int{
+	var c=10
+	s:=a+b+c+g
+	return s
+}
+//值传递
+func funcValRef(a int)  {
+	a =1000
+	fmt.Printf("int func inner: %d\n",a)
+}
+//引用传递
+func funcValRefPtr(a *int)  {
+	*a=1000
+	fmt.Printf("int func inner: %d\n",*a)
+}
+func main(){
+	var a,b,c int
+	a=10
+	b=20
+	c=a+b+g
+	fmt.Println(a,b,c)
+	fmt.Println(sum(1,2))
+	var p int=100
+	funcValRef(p)
+	fmt.Println(p)
+	funcValRefPtr(&p)
+	fmt.Println(p)
+}
+总结:&p是指向的内存地址 所以改变了p的地址 引用上面的方法改变的 而直接引用则是给它一个值 这个值是可以改变的
+package main
+
+import "fmt"
+
+func zhizhentest(a int){
+	a=90
+	fmt.Printf("This is a: %d\n",a)
+}
+func zhizhenprod(a *int){
+	*a=100
+	fmt.Printf("this is a prod:%d\n",*a)
+}
+
+func main(){
+	var y int=2000
+	zhizhentest(y)
+	fmt.Println(y)
+	zhizhenprod(&y)
+	fmt.Println(y)
+}
+这个例子是专门写的对于指针的案列
+数组
+第一个元素的索引都是0开始的
+package main
+import (
+	"fmt"
+)
+func changeEle(arr *[3]int){  //定义arr是一个指针
+	arr[0]=1000  //指针的赋值需要加*号 也可以不加 它是值传递的类型 0指向了1000 拷贝的是指针 而不是数组的本身的值
+	arr[1]=100 //这个是后数组元素的指针0和1指向的分别是1000和100 所以不管下面的定义是多少都会返回它 与直接给定的值不同 给的值返回的是值
+}
+func main(){
+	var arr1 [5]int //这种是声明数组的类型为int 有五个元素
+	arr1[1]=10
+	fmt.Println(arr1,arr1[0],arr1[1])
+	arr2 := [3]int{1,2,3} //这种不用声明数组的类型 由系统自动指定
+	fmt.Println(arr2)
+	arr3 := [...]int{4,5,6,7,8,9}
+	fmt.Println(len(arr3),arr3)
+	for i:=0;i<len(arr3);i++{
+		fmt.Println(arr3[i]) //遍历数组对应的值 根据指针显示
+	}
+	for i,num:=range arr3{  //range代表的是数组的元素和索引的值
+		fmt.Println(i,num)
+	}
+	for _,num:=range arr3{  //去掉前面的_表示的变量
+		fmt.Println(num)
+	}
+	for i :=range arr3{ //默认值能打印索引
+		fmt.Println(i)
+	}
+	//var grid [4][5]int
+	arr4:=[3][4]int{ //表示声明这个数组有三行四列
+		{1,2,3,4},
+		{5,6,7,8},
+		//{9,10,11,12}, 元素不声明则默认为0
+	}
+	fmt.Println(arr4)
+	arr5 :=[3] int {1,2,3} //这里的数组必须和上面的函数类型和数量一致才可以在函数中调用
+	changeEle(&arr5)  //引用指针
+	fmt.Println(arr5)
+}
+
+//关于go语言中数组与指针的引用方法
+package main
+
+import "fmt"
+
+func shuzu(arr *[3]int)  {
+	arr[0]=1
+	arr[1]=2
+}
+func main(){
+	arr2:=[3]int{100,200,300}
+	fmt.Println(arr2)
+	shuzu(&arr2)
+	fmt.Println(arr2)
+}
+数组的声明方式：
+
+var arr1 [5]int
+
+arr2 := [3]int{1, 2, 3}
+
+arr3 := [...]int{4, 5, 6, 7, 8}
+
+arr4 := [3][4]int{
+    {0, 1, 2, 3},   /*  第一行索引为 0 */
+    {4, 5, 6, 7},   /*  第二行索引为 1 */
+    {8, 9, 10, 11}, /* 第三行索引为 2 */
+}
+数组声明需要指定元素类型及元素个数，var var_name [SIZE] var_type；初始化数组中 {} 中的元素个数不能大于 [] 中的数；可以使用 . . . （不能省略）来忽略数组大小，会根据元素的个数来设置数组的大小；多维数组，本质上也是一维数组。
+
+
+切片
+切换的容量默认和长度是对等的
+package main
+
+import (
+	"fmt"
+)
+func changeEle(arr []int){ //这种指针是没有值的是表示切片arr是形参
+	arr[0]=2000
+}
+
+func main(){
+	arr := [...]int{0,1,2,3,4,5,6,7}
+	s1 := arr[2:6] //前闭后开区间 让s1是arr数组的2-5指针对应的值
+	fmt.Println(s1)
+	s2:=arr[:6]  //0-5
+	fmt.Println(s2)
+	s3:=arr[2:] //2到结束
+	fmt.Println(s3)
+	s4:=arr[:]
+	fmt.Println(s4)
+	s5 := make([]int,5,10) //指定s5切片的类型 大小和容量
+	fmt.Printf("s5=%v len=%d cap=%d\n",s5,len(s5),cap(s5))
+	var s6 [5]int //不用:=就得写这么复杂
+	s6[1]=1
+	fmt.Printf("s6=%v len=%d cap=%d\n",s6,len(s6),cap(s6))
+	s7 := arr[2:6]
+	fmt.Printf("arr=%v s6=%v len=%d cap=%d\n",arr,s7,len(s7),cap(s7)) //容量默认是数组的第一个元素到数组最后的元素 不可以大于arr的大小
+	changeEle(s7) //引用传递
+	fmt.Println(s7,s6,arr)
+}
+
+指针在切片中的应用:
+package main
+import (
+	"fmt"
+)
+func test(brr []int){
+	brr[0]=3000
+}
+func main(){
+	brr:=[...]int{0,1,2,3,4,5,6,7}
+	s8:=brr[2:6]
+	test(s8)
+	fmt.Println(s8,brr)
+}
+切片是对于数组的引用 相当于py中的列表
+var s0 []int // s0 = []int{1, 2, 3}
+s1 := make([]int, 5, 5)
+
+arr := [...]int{0, 1, 2, 3, 4, 5, 6, 7}
+s2 := arr[2:6]
+s3 := arr[2:]
+s4 := arr[:6]
+s5 := arr[:]
+s6 := s4[3:5]
+初始化切片，[]表示是切片类型，不需要指定大小；也可以通过make关键字进行初始化，make([]T, length, capacity)；指定数组的索引初始化切片，是数组的引用；切片之上还可以继续指定切片。
+
+切片的数据结构：
+
+type slice struct {
+    array unsafe.Pointer
+    len   int
+    cap   int
+}
+
+切片的操作:
+package main
+import (
+	"fmt"
+)
+func main()  {
+	arr:=[...]int{0,1,2,3,4,5,6,7,8,9}
+	s1:=arr[2:6]
+	fmt.Println(s1,len(s1),cap(s1),arr)
+	s1=append(s1,10)
+	fmt.Println(s1,len(s1),cap(s1),arr) //我们发现追加10之后是在arr数组中替换了8指针的元素
+	s1=append(s1,20,30,40,50,60,70,80,90,100)
+	fmt.Println(s1,len(s1),cap(s1),arr) //s1的切片超过的部分被重新分配的数组,因为超过了之前的容量之后被重新分配了 这个时候之前的数组不变 之前的数组被垃圾回收机制给回收了 go语言自带的
+	var s2 []int
+	fmt.Println(s2,s2==nil,len(s2),cap(s2))
+	//s2= append(s2, 1,2,3,4)
+	//fmt.Println(s2,len(s2),cap(s2))
+	for i:=0;i<20;i++{
+		s2=append(s2,i)
+		fmt.Println(s2,len(s2),cap(s2)) //当源有的切片不够的元素的话扩容的容量会翻倍<1024 大于1024的时候如1025是加上1025+1025/4+1025/4
+	}
+	s3:=make([]int,1024)
+	fmt.Println(s3,len(s3),cap(s3))
+	s3=append(s3,200)
+	fmt.Println(s3,len(s3),cap(s3)) // 1024+1024/4=1280
+	//如果原有的切片容量小于1024,那么扩容就2倍的容量进行扩充 如果大于1024 就原有的基础之上增加4/1的容量
+	s4:=[]int{1,2,3,4}
+	s5:=make([]int,10) //type,size
+	fmt.Println(s4,s5)
+	copy(s5,s4) //dst,src
+	fmt.Println(s4,s5)
+	s6:=[]int{0,1,2,3,4,5,6,7,8,9}
+	fmt.Printf("before delete slice s6=%v\n",s6)
+	s6=append(s6[:4],s6[5:]...) //表示0-3,5-end
+	fmt.Printf("after delete slice s6=%v\n",s6)
+	s6=s6[1:]
+	fmt.Printf("after delete first element slice s6=%v\n",s6)
+	s6=s6[0:len(s6)-1]
+	fmt.Printf("after delete tail element slice s6=%v\n",s6)
+}
+
+切片的一些操作：
+
+s1 = append(s1, 50)
+
+var s2 []int
+
+copy(s1, s2)
+
+s2 = append(s2[:1], s2[2:]...)
+添加元素时，如果超过 cap，会重新分配一个新的底层数组；因为是值传递，所以需要用一个变量接收 append 后的值；切片在未初始化之前默认为 nil，长度为0，可以通过s == nil进行判断；可以利用 append 来达到删除元素的功能
+
+
+Map集合:
+
+Map 是一种无序的键值对的集合。Map 最重要的一点是通过 key 来快速检索数据，key 类似于索引，指向数据的值。
+
+Map 是一种集合，所以我们可以像迭代数组和切片那样迭代它。不过，Map 是无序的，我们无法决定它的返回顺序，这是因为 Map 是使用 hash 表来实现的。
+
+定义 Map，可以使用内建函数 make 也可以使用 map 关键字来定义 Map:
+
+/* 声明变量，默认 map 是 nil */
+var map_variable map[key_data_type]value_data_type
+
+/* 使用 make 函数 */
+map_variable := make(map[key_data_type]value_data_type)
+如果不初始化 map，那么就会创建一个 nil map。nil map 不能用来存放键值对。
+
+可以使用range关键字遍历Map
+map是无序的 哈希表 可以通过对key进行排序进行取值
+除了slice map function之外的内建类型都可以作为key
+package main
+
+import (
+	"fmt"
+	"sort"
+)
+func main(){
+	var m map[string]int //m=nill
+	fmt.Println(m,m==nil)
+	m=make(map[string]int)
+	m["a"]=10
+	fmt.Println(m)
+	m1:=map[string]int{
+		"a":1,
+		"b":2,
+		"c":3,
+		"d":4,
+	}
+	fmt.Println(m1,m1["b"],m1["c"],m1["e"]) //默认不存在是int类型的0值
+	if val,ok:=m1["d"];ok { //判断key是否存在
+		fmt.Printf("key d in map m1 and value %d\n",val)
+	}else {
+		fmt.Printf("key d not map m1")
+	}
+	for key:=range m1{
+		fmt.Printf("key=%s val=%d\n",key,m1[key])
+	}
+	fmt.Printf("------------\n")
+	delete(m1,"b")
+	for key,val:=range m1{
+		fmt.Printf("key=%s val=%d\n",key,val)
+	}
+	fmt.Printf("如何变成有序集合：\n")
+	var keys [] string
+	for key:=range m1{
+		keys=append(keys,key)
+	}
+	sort.Strings(keys) //排序有序集合
+	fmt.Println(keys)
+	for _,k :=range keys{
+		fmt.Printf("key=%s,val=%d\n",k,m1[k])
+	}
+}
+
+
+结构体：面向对象
+type Book struct {
+    id      int
+    title   string
+    author  string
+    subject string
+}
+
+book := new(Book)
+
+func (book *Book) String() string {
+    return fmt.Sprintf("id=%d,title=%s,author=%s,subject=%s",
+        book.id, book.title,
+        book.author, book.subject)
+}
+go语言不支持继承和多态，但是有接口的概念；使用new函数给一个新的结构体变量分配内存，它返回指向已分配内存的指针；给结构体定义的函数叫方法，前面需要带上结构体指针的声明
+package main
+import "fmt"
+type Book struct {
+	id int
+	title string
+	author string
+	subject string
+}
+//New开头 将结构体变成小写 可以来强制使用工厂方法来实体化
+func NewBook(id int,title,author,subject string) *Book{
+	return &Book{id,title,author,subject}
+}
+func (book *Book) String()string{
+	return fmt.Sprint("id=%d,title=%s,author=%s,subject=%s\n",
+		book.id,book.title,book.author,book.subject)
+}
+
+func printBook(book *Book){ //定义一个函数book结构体为Book 让结构体为指针类型
+	fmt.Printf("id=%d,title=%s,author=%s,subject=%s\n",
+		book.id,book.title,book.author,book.subject)
+	book.id=1000 //传递一个id的值是1000
+}
+func (book *Book) GetTitle() string{
+	return book.title
+}
+
+func (book *Book) SetTitle(title string) {
+	book.title=title
+}
+
+func main()  {
+	var book1 *Book  //实例化这个结构体为book1
+	book1=new(Book) //new返回的是一个指针所以加*
+	book1.id=1001
+	book1.title="go in action"
+	book1.author="james"
+	book1.subject="aboot golang"
+	fmt.Println(book1)
+	fmt.Println(book1.String()) //打印它的结构体
+	fmt.Println("---------------------\n")
+	book3:=Book{
+		1002,
+		"python in action",
+		"jordan",
+		"about python",
+	}
+	fmt.Println(book3)
+	book2:=Book{
+		id:1002,
+		title:"python in action",
+		author:"jordon",
+		subject:"about python",
+	}
+	fmt.Println(book2)
+	fmt.Println("book2.title=",book2.title)
+	printBook(&book2) //因为函数的参数是默认为值传递所以还是不会变 除非定义为指针
+	fmt.Println(book2)
+	fmt.Println(book2.String())
+
+	book4:=NewBook(1004,"java","gsl","java in action")
+	fmt.Println(book4.GetTitle())
+	fmt.Println(book4.String())
+}
+
+内嵌结构体: 此章节省略
+带标签的结构体：
+
+type Book struct { // 标签(tag)
+    id      int    "书籍编号"
+    title   string "书籍标题"
+    author  string "书籍作者"
+    subject string "书籍主题"
+}
+结构体中的字段除了有名字和类型外，还可以有一个可选的标签（tag）
+
+匿名字段和内嵌结构体：
+
+type TechBook struct {
+    cat  string
+    int  // 匿名字段
+    Book // 匿名字段
+}
+结构体可以包含一个或多个匿名（或内嵌）字段；匿名类型的可见方法也同样被内嵌，这在效果上等同于继承
+一个简单的结构体使用方法
+package main
+import "fmt"
+type shuxue struct {
+	fenshu int
+	dengji string
+}
+func main()  {
+	a:=new(shuxue) //使用 new 函数给一个新的结构体变量分配内存，它返回指向已分配内存的指针
+	a.dengji="youxiu"
+	a.fenshu=90
+	fmt.Printf("this int is:%s\n",a.fenshu)
+	fmt.Printf("this is stringis :%s\n",a.dengji)
+	fmt.Println(a)
+}
+
+
+案列结构体:
+package main
+import (
+	"fmt"
+	"strings"
+)
+type Person struct {
+	firstName   string
+	lastName    string
+}
+func upPerson(p *Person) {
+	p.firstName = strings.ToUpper(p.firstName)
+	p.lastName = strings.ToUpper(p.lastName)
+}
+func main() {
+	// 1-struct as a value type:
+	var pers1 Person
+	pers1.firstName = "Chris"
+	pers1.lastName = "Woodward"
+	upPerson(&pers1)
+	fmt.Printf("The name of the person is %s %s\n", pers1.firstName, pers1.lastName)
+
+	// 2—struct as a pointer:
+	pers2 := new(Person)
+	pers2.firstName = "Chris"
+	pers2.lastName = "Woodward"
+	(*pers2).lastName = "Woodward"  // 这是合法的
+	upPerson(pers2)
+	fmt.Printf("The name of the person is %s %s\n", pers2.firstName, pers2.lastName)
+
+	// 3—struct as a literal:
+	pers3 := &Person{"Chris","Woodward"}
+	upPerson(pers3)
+	fmt.Printf("The name of the person is %s %s\n", pers3.firstName, pers3.lastName)
+}
+
+
+
+
+
+
+package main
+import (
+	"fmt"
+)
+type Phone interface { //定义一个接口叫Phone 有call功能
+	call()
+}
+type NokiaPhone struct {  //定义一个结构体叫NokiaPhone
+}
+func (nokiaPhone NokiaPhone) call() {  //定义一个函数叫nokiaphone 结构为nokiaphone 引用call接口
+	fmt.Println("I am Nokia, I can call you!")
+}
+type IPhone struct { //定义一个结构体叫IPhone
+}
+func (iPhone IPhone) call() { //定义一个函数叫iphone 结构为Iphone 引用call接口
+	fmt.Println("I am iPhone, I can call you!")
+}
+func main() {
+	var phone Phone //在main函数里面定义了一个Phone类型变量 变量名是phone 结构为Phone
+
+	phone = new(NokiaPhone) //用phone变量实例化结构体Nokiaphone
+	phone.call() //调用call方法打印字段
+
+	phone = new(IPhone) //用phone变量实例化结构体IPhone
+	phone.call() //调用call方法打印字段
+
+}
+
+
+
+接口和duck typing
+duck typing：
+
+当一只鸟走起来像鸭子、游泳起来像鸭子、叫起来也像鸭子，那么这只鸟就可以被称为鸭子
+
+我们并不关心对象是什么类型，到底是不是鸭子，只关心行为（描述事物的外部行为，而非内部结构）
+
+接口：
+
+type Phone interface {
+    Call()
+}
+
+type MiPhone struct {
+}
+
+func (mp *MiPhone) Call() {
+    fmt.Println("I am iPhone, I can call you!")
+}
+接口把所有的具有共性的方法定义在一起；任何其他类型只要实现了这些方法就是实现了这个接口
+
+package main
+import (
+	"fmt"
+	"strconv"
+)
+type Interger int
+func (it Interger)String()string{  //针对于Interger类型定义一个String的方法 把Interger的值转换成string类型
+	return strconv.Itoa(int(it))
+}
+func main()  {
+	it:=Interger(100)
+	str:=it.String()
+	fmt.Printf("it=%s and type=%T\n",str,str)
+}
+类型转换的方法
+package main
+import (
+   "fmt"
+   "io"
+   "io/ioutil"
+   "os"
+)
+type Speaker interface{ //定义一个演讲者的接口
+   Say(string)
+}
+func SpeakAlphabet(speaker Speaker){ //让演讲者用它的方法说一段话
+   speaker.Say("abcdefghijk...xyz")
+}
+type Person struct{  //定义一个结构体方法
+   name string
+}
+func (p *Person) Say(message string){  //定义一个指针
+   fmt.Println(p.name,":",message)
+}
+
+type SpeakWriter struct {
+   w io.Writer
+}
+func (sw *SpeakWriter) Say(message string){
+   io.WriteString(sw.w,message)
+}
+
+type FileWriter struct {
+   filename string
+}
+
+func (fw *FileWriter)Writer(p []byte)(n int,err error)  {
+   err=ioutil.WriteFile(fw.filename,p,0644)
+   n=0
+   return
+}
+func main(){
+   james:=new(Person)
+   james.name="James"
+   SpeakAlphabet(james)
+   fmt.Printf("--------------------\n")
+   console:=new(SpeakWriter)
+   console.w=os.Stdout
+   SpeakAlphabet(console)
+   fmt.Printf("--------------------\n")
+   fileWriter :=new(FileWriter)
+   fileWriter.filename="abc.txt"
+   fileSpeakWriter:=new(SpeakWriter)
+   fileSpeakWriter.w=fileWriter
+   SpeakAlphabet(fileSpeakWriter)
+}
+
+
+
+空接口和类型判断
+类型断言和判断：
+
+if v, ok := varI.(T); ok {
+    // varI is type T
+    Process(v)
+}
+// varI is not of type T
+
+switch t := varI.(type) {
+case *xxx:
+    fmt.Printf("Type XXX %T with value %v\n", t, t)
+default:
+    fmt.Printf("Unexpected type %T\n", t)
+}
+varI 必须是一个接口变量；应该总是使用该方式进行类型断言；接口变量的类型也可以使用 type-swtich 来检测
+
+空接口：
+type Any interface {}
+不包含任何方法的空接口，类似于Java中的Object基类，可以表示任何类型。
+
+package main
+
+import "fmt"
+
+type phone interface {
+	Call(string)
+}
+type Camera interface {
+	Take() string
+}
+type SamrtPhone interface {
+	phone
+	Camera
+	Download(string)string
+}
+func ListSmartPhoneFunction(sp SamrtPhone){
+	sp.Call("10086")
+	fmt.Println("sp.Take()",sp.Take())
+	fmt.Println("sp.Download()",sp.Download("https://youdianzhishi.com"))
+}
+type Miphone struct {
+	logo string
+}
+
+func (mp *Miphone) Call(phone string)  {
+	fmt.Println("Call to phone:",phone)
+}
+func (mp *Miphone) Take() string  {
+	return "logo.png"
+}
+func (mp *Miphone) Download(url string) string{
+	return fmt.Sprintf("visit url: %s",url)
+}
+func mian(){
+	var sp SamrtPhone
+	mp:=new(Miphone)
+	mp.logo="xiaomi"
+	sp=mp
+	ListSmartPhoneFunction(sp)
+}
+
+
+
+常用的系统接口
+接口方法定义：
+
+指针方法可以通过指针调用
+值方法可以通过值调用
+接收者是值的方法可以通过指针调用，因为指针会首先被解引用
+接收者是指针的方法不可以通过值调用，因为存储在接口中的值没有地址
+package main
+
+import "fmt"
+
+type Appender interface {
+	Append(int)
+}
+type Lener interface {
+	Len()int
+}
+type List []int
+
+func (l List)len()int  {
+	return len(l)
+}
+func (l *List)Append(val int){
+	*l=append(*l,val)
+}
+func Counter(a Appender,start,end int)  {
+	for i:=start;i<=end;i++{
+		a.Append(i)
+	}
+}
+func IsLarge(l Lener) bool{
+	return l.Len() > 50
+}
+func main(){
+	//var lst List
+	//Counter(lst,1,10)
+	//IsLarge(lst)
+	plist:=new(List)
+	Counter(plist,1,10)
+	fmt.Println(plist)
+}
+关于内嵌结构体和接口章节需要重看
+
+错误处理
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+//自定义一个结构体实现除法运算
+type Divide struct {
+	dividee int //这是结构体的两个方法
+	divider int
+}
+//error interface
+func (d *Divide) Error() string {
+	strFormat :=`
+	Cannot proceed,the divider is & zero
+	dividee:%d
+	divider:0
+	`
+	return fmt.Sprintf(strFormat,d.dividee)
+}
+func computeDiv(d *Divide)(result int,err error){
+	if d.divider==0{
+		err=d
+	}else{
+		result=d.dividee/d.divider
+	}
+	return
+}
+func main()  {
+	err:=errors.New("a new err object") //用errors下面的new方法生成新的对象
+	fmt.Printf("%v\n",err)
+	err=fmt.Errorf("a fmt error format object: %s",err.Error())
+	fmt.Printf("%v",err)
+	de :=Divide{100,10}
+	if result,err:=computeDiv(&de);err!=nil{
+		fmt.Println(err.Error())
+	}else {
+		fmt.Println(result)
+	}
+}
+
+
+基于老师的除法做了一个减法的错误处理案列:
+package main
+import (
+	"errors"
+	"fmt"
+)
+//自定义一个结构体实现减法运算
+type jianfa struct {
+	beijianshu int //这是结构体的两个方法
+	jianshu int
+}
+//error interface
+func (d *jianfa) Error() string {
+	strFormat :=`
+	Cannot proceed,the divider is & zero
+	beijianshu:%d
+	jianshu:da
+	`
+	return fmt.Sprintf(strFormat,d.beijianshu)  //返回strformat和被除数
+}
+func computeDiv(d *jianfa)(result int,err error){
+	if d.beijianshu<=d.jianshu{
+		err=d
+	}else{
+		result=d.beijianshu-d.jianshu
+	}
+	return
+}
+func main()  {
+	err:=errors.New("a new err object") //用errors下面的new方法生成新的对象
+	fmt.Printf("%v\n",err)
+	err=fmt.Errorf("a fmt error format object: %s",err.Error())
+	fmt.Printf("%v",err)
+	de :=jianfa{100,10}
+	if result,err:=computeDiv(&de);err!=nil{
+		fmt.Println(err.Error())
+	}else {
+		fmt.Println(result)
+	}
+}
+
+
+package file
+import (
+   "fmt"
+   "io/ioutil"
+   "os"
+)
+func Readfile(filename string)(string,error){
+   file,err:=os.Open(filename)
+   defer fmt.Println("first defer function")
+   defer file.Close()
+   if err !=nil{
+      panic(err)
+   }
+   defer fmt.Println("second defer function")
+   bts,err:=ioutil.ReadAll(file)
+   if err!=nil{
+      return "",err
+   }
+   return string(bts),nil
+}
+
+
+package main
+import "fmt"
+func tryPanic(){
+   defer func(){
+      if e:=recover();e !=nil{
+         fmt.Printf("catch panic in recover function:%v\n",e)
+      }
+   }()
+   fmt.Println("first line in tryPanic function")
+   panic("call a panic")
+   fmt.Println("sencod line in tryPanic function")
+   a:=0
+   b:=100
+   r:=b/a
+   fmt.Println(r)
+   fmt.Println("second line in tryPanic function")
+}
+func main(){
+   fmt.Println("start call tryPanic")
+   tryPanic()
+   fmt.Println("end call tryPanic")
+}
+
+
+
+package main
+
+import "fmt"
+func printGrouting(i int){
+   fmt.Println("I am fro gtouting %d\n",i)
+}
+func mian(){
+   for i:=0;i<10;i++{
+      go func(i int){
+         fmt.Printf("I am fro gtouting %d\n",i)
+      }(i)
+   }
+}
+
+
+Go利用http模块开发web站点
+http://localhost:9999/html
+http://localhost:9999/image
+http://localhost:9999
+http://localhost:9999/json
+
+package main
+import (
+	"encoding/json"
+	"fmt"
+	"html/template"
+	"io"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"path"
+)
+func sendhttprequestDemo()  {
+	req,err:=http.NewRequest(http.MethodGet,"http://www.baidu.com",nil)
+	if err!=nil{
+		panic(err)
+	}
+	req.Header.Add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36")
+	req.Header.Add("Host","www.baidu.com")
+	//resp,err:=http.Get("http://www.baidu.com") //构造如何发起请求
+	resp,err:=http.DefaultClient.Do(req) //发起请求
+
+	if err !=nil{
+		panic(err)
+	}
+	defer resp.Body.Close()
+	body,err:=ioutil.ReadAll(resp.Body)
+	if err!=nil{
+		panic(err)
+	}
+	fmt.Println(string(body))
+}
+type User struct {
+	Name string `json:"name"`
+	Age int `json:"age"`
+}
+//{"name":"cnych","age":20}
+func main(){
+	//sendhttprequestDemo()
+	http.HandleFunc("/",func(writer http.ResponseWriter,request *http.Request){
+		io.WriteString(writer,"hello Golang\n")
+	})
+	http.HandleFunc("/json",func(writer http.ResponseWriter,request *http.Request){
+		user:=User{
+			Name: "cnych",
+			Age:  30,
+		}
+		userJson,err:=json.Marshal(user)
+		if err!=nil{
+			http.Error(writer,err.Error(),http.StatusInternalServerError)
+			return
+		}
+		writer.Header().Set("Content-Type","application/json")
+		writer.Write(userJson)
+	})
+	http.HandleFunc("/image",func(writer http.ResponseWriter,request *http.Request) {
+		image:=path.Join("image","image.jpg")
+		http.ServeFile(writer,request,image)
+	})
+	http.HandleFunc("/html",func(writer http.ResponseWriter,request *http.Request) {
+		user:=User{
+			Name: "cnych",
+			Age:  30,
+		}
+		htmlFile:=path.Join("templates","index.html")
+		tmpl,err:=template.ParseFiles(htmlFile)
+		if err!=nil{
+			http.Error(writer,err.Error(),http.StatusInternalServerError)
+			return
+		}
+		if err:=tmpl.Execute(writer,user);err!=nil{
+			http.Error(writer,err.Error(),http.StatusInternalServerError)
+		}
+
+	})
+	log.Fatal(http.ListenAndServe(":9999",nil))
+}
+
+
+
+
+
+
+
+在templates目录下创建index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Hello {{.Name}},I'm {{.Age}}</h1>
+<p>这是golang模板</p>
+</body>
+</html>
+在image目录下创建image.jpg文件
+
+
+
+

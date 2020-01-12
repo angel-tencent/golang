@@ -1,0 +1,91 @@
+rabbitmq:
+  image: rabbitmq:3.8-management-alpine
+  restart: always
+  privileged: true
+  container_name: rabbitmq-laoban
+  hostname: rabbit3
+  ports:
+    - "15673:15672"
+    - "5673:5672"
+  volumes:
+    - ./data:/var/lib/rabbitmq
+  environment:
+    - TZ=Asia/Shanghai
+    # - RABBITMQ_ERLANG_COOKIE=build.by.2019
+    - RABBITMQ_NUM_ACCEPTORS_TCP=4
+
+
+新购买的机器先系统初始化:
+last 查看谁访问了系统
+
+ulimit -n 
+num=$(cat /proc/sys/fs/file-max)
+echo $num * 0.75 |bc  #一般设置为系统最大文件打开数的四分之三
+vim /etc/security/limits.conf
+root soft nofile 593455.50
+root hard nofile 593455.50
+
+yum upadte -y centos7.6直接升级到7.7
+
+生产环境下用Go写一个脚本探测docker镜像的存活 也可以用dockerapi调用
+package main
+import (
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"os/exec"
+	"strings"
+)
+func main() {
+	opstest()
+}
+func SendDingMsg(msg string) {
+	//请求地址模板
+	webHook := `https://oapi.dingtalk.com/robot/send?access_token=b6d0d866509eac8bd6cfb8a9d7a49c189fec375020a9903b182dc0d96edb31e6`
+	content := `{"msgtype": "text",
+	"text": {"content": "`+ msg + `"}
+	}`
+	//创建一个请求
+	req, err := http.NewRequest("POST", webHook, strings.NewReader(content))
+	if err != nil {
+		// handle error
+	}
+	client := &http.Client{}
+	//设置请求头
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	//发送请求
+	resp, err := client.Do(req)
+	//关闭请求
+	defer resp.Body.Close()
+	if err != nil {
+		// handle error
+	}
+}
+func opstest() {
+	strData:=ExecCommand("docker ps | grep gitlab | awk -F' ' '{print $NF}'")
+	//str = strings.Replace(str, " ", "", -1) 去除空格
+	strData = strings.Replace(strData, "\n", "", -1) //去除换行符
+	//fmt.Printf("%v,%T",strData,strData) 不知道的话先打印它的类型
+	shell:="gitlab"
+	if strData==shell {
+		SendDingMsg("gitlab is ok")
+	}else {
+		SendDingMsg("gitlab not ok")
+	}
+}
+func ExecCommand(strCommand string)string{
+	cmd := exec.Command("/bin/bash", "-c", strCommand)
+	stdout, _ := cmd.StdoutPipe()
+	if err := cmd.Start(); err != nil{
+		fmt.Println("Execute failed when Start:" + err.Error())
+		return ""
+	}
+	out_bytes, _ := ioutil.ReadAll(stdout)
+	stdout.Close()
+	if err := cmd.Wait(); err != nil {
+		fmt.Println("Execute failed when Wait:" + err.Error())
+		return ""
+	}
+	return string(out_bytes)
+}
+

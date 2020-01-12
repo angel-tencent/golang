@@ -1,0 +1,85 @@
+https://blog.csdn.net/Star_CSU/article/details/82798018
+package main
+import (
+"fmt"
+"github.com/streadway/amqp"
+"sync"
+"time"
+)
+var count int =0
+var mutex sync.Mutex
+func main() {
+fmt.Println(time.Now())
+conn,err:=amqp.Dial("amqp://guest:guest@120.76.79.120:5672/")
+if err!=nil {
+fmt.Println(err)
+}
+channel,err:=conn.Channel()
+if err!=nil {
+fmt.Println(err)
+}
+channel.ExchangeDeclare("test",amqp.ExchangeTopic, true, false, false, false, nil)
+channel.QueueDeclare("testQueue", true, false, false, false, nil)
+channel.QueueBind("testQueue","testKey","test",false,nil)
+channel.Close()
+for ;;{
+//go testNotCloseConn()
+go testCloseConn()
+time.Sleep(time.Nanosecond)
+}
+fmt.Println(time.Now())
+}
+func testNotCloseConn(conn *amqp.Connection){
+mutex.Lock()
+channel,err:=conn.Channel()
+count++
+fmt.Println(count)
+if err!=nil {
+fmt.Println(err)
+panic(err)
+}
+mutex.Unlock()
+amqpTest:=amqp.Publishing{
+ContentType:"application/json",
+Body:[]byte("{name:'chenzonqgi',host:'localhost'}"),
+}
+
+err=channel.Publish("test","testKey",false,false,amqpTest)
+if err!=nil{
+fmt.Println(err)
+}
+defer channel.Close()
+fmt.Println("发送成功！")
+time.Sleep(time.Second*600)
+}
+
+func testCloseConn(){
+mutex.Lock()
+conn,err:=amqp.Dial("amqp://guest:guest@120.76.79.120:5673/")
+count++
+fmt.Println(count)
+if err!=nil {
+fmt.Println("*****",count,"****")
+return
+}
+mutex.Unlock()//加锁位置
+channel,err:=conn.Channel()
+defer conn.Close()
+defer channel.Close()
+if err!=nil {
+fmt.Println(err)
+}
+amqpTest:=amqp.Publishing{
+ContentType:"application/json",
+Body:[]byte("{name:'chenzonqgi',host:'localhost'}"),
+}
+err=channel.Publish("test","testKey",false,false,amqpTest)
+if err!=nil{
+fmt.Println(err)
+}
+fmt.Println("发送成功！")
+time.Sleep(time.Second*600)/眠协程，不让conn和channel关闭
+}
+
+
+

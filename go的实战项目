@@ -1,0 +1,694 @@
+关于go操作系统中创建目录的策略:
+
+package main
+import (
+	"fmt"
+	"log"
+	"os"
+)
+var (
+	newfile *os.File
+	fileinfo os.FileInfo
+	err  error
+	path ="test/test2/"
+	filename="demo"
+	filepath= path + filename
+)
+
+func main()  {
+	//创建文件夹
+	err=os.MkdirAll(path,0777)
+	if err!=nil{
+		fmt.Printf("%s",err)
+	}else {
+		fmt.Println("成功创建目录")
+	}
+	//创建空白文件
+	newfile,err=os.Create(filepath)
+	if err!=nil{
+		log.Fatal(err)
+	}
+	fmt.Println(newfile)
+	//查看文件的信息,如果文件不存在,则返回错误
+	fileinfo,err=os.Stat(filepath)
+	if err!=nil && os.IsNotExist(err){
+		log.Fatal("文件不存在")
+	}else {
+		log.Fatal(err)
+	}
+	fmt.Println("文件名称:",fileinfo.Name())
+	fmt.Println("文件大小",fileinfo.Size())
+	fmt.Println("文件权限",fileinfo.Mode())
+	fmt.Println("最后修改时间:",fileinfo.ModTime())
+	fmt.Println("是否文件夹:",fileinfo.IsDir())
+	fmt.Printf("系统接口类型:%T\n",fileinfo.Sys())
+	fmt.Printf("系统信息:%+v\n\n",fileinfo.Sys())
+}
+
+利用go删除mongodb的数据
+//go get gopkg.in/mgo.v2
+package main
+import (
+	"gopkg.in/mgo.v2"
+)
+const URL = "39.108.51.229:27017" 
+func main() {
+	session, err := mgo.Dial(URL)  //连接服务器
+	if err != nil {
+		panic(err)
+	}
+	c := session.DB("ChatRoom").C("account") //选择ChatRoom库的account表
+	m := map[string]interface{}{"id": 7, "name": "tongjh", "age": 25}
+	c.Insert(m) //增
+	m1 := map[string]interface{}{"id": 7}
+	c.Remove(m1)
+	//c.RemoveAll(c)这个一般不能直接使用有风险
+}
+利用go删除mongodb的数据
+//go get gopkg.in/mgo.v2
+package main
+import (
+	"gopkg.in/mgo.v2"
+)
+const URL = "39.108.51.229:27017" 
+func main() {
+	session, err := mgo.Dial(URL)  //连接服务器
+	if err != nil {
+		panic(err)
+	}
+	c := session.DB("ChatRoom").C("account") //选择ChatRoom库的account表
+	m := map[string]interface{}{"id": 7, "name": "tongjh", "age": 25}
+	c.Insert(m) //增
+	m1 := map[string]interface{}{"id": 7}
+	c.Remove(m1)
+	//c.RemoveAll(c)这个一般不能直接使用有风险
+}
+
+文件的移动和重命名
+package main
+import (
+        "log"
+        "os"
+)
+func main()  {
+        originalpath:="test.txt"
+        newpath:="./test/test2.txt"
+        err:=os.Rename(originalpath,newpath)
+        if err!=nil{
+                log.Fatal(err)
+        }
+}
+
+文件的打开
+package main
+import (
+        "log"
+        "os"
+)
+func mian()  {
+        //简单的以只读的方式打开
+        filere()
+}
+var (
+        file *os.File
+        fileinfo os.FileInfo
+        err error
+        dirPath="/root/"
+        filename="sentinel.conf"
+        filepath=dirPath+filename
+)
+func filere()  {
+        file,err:=os.Open(dirPath)
+        if err!=nil{
+                log.Fatal(err)
+        }
+        //打印文件内容
+        buf:=make([]byte,1024)
+        for {
+                n,_:=file.Read(buf)
+                if 0==n{
+                        break
+                }
+                os.Stdout.Write(buf[:n])
+        }
+        file.Close()
+        file,err=os.OpenFile(dirPath,os.O_APPEND,0666)
+        if err!=nil{
+                log.Fatal(err)
+        }
+        file.Close()
+}
+
+
+文件的删除 在gopath中删除当前的文件
+package main
+
+import (
+        "log"
+        "os"
+)
+
+func main()  {
+        err:=os.Remove("./test.txt")
+        if err!=nil{
+                log.Fatal(err)
+        }
+}
+复制文件
+package main
+
+import (
+	"io"
+	"log"
+	"os"
+)
+
+var (
+	newFile *os.File
+	fileInfo os.FileInfo
+	err1 error
+	Path ="test/test2"
+	fileName="demo"
+	filePath=Path+fileName
+)
+
+func filedu()  {
+	originalFile,err:=os.OpenFile(filePath)
+	if err!=nil{
+		log.Fatal(err)
+	}
+	defer originalFile.Close()
+	//创建新的文件作为目标文件
+	newFile,err:=os.Create(filePath+"_copy")
+	if err!=nil{
+		log.Fatal(err)
+	}
+	defer newFile.Close()
+	//从源文件中复制字节到目标文件
+	bytesWritten,err:=io.Copy(newFile,originalFile)
+	if err!=nil{
+		log.Fatal(err)
+	}
+	log.Printf("文件已复制,大小%d bytes.",bytesWritten)
+	//将文件内容flush到硬盘中
+	err=newFile.Sync()
+	if err!=nil{
+		log.Fatal(err)
+	}
+}
+func main()  {
+
+}
+写入函数
+package main
+import (
+	"log"
+	"os"
+)
+var (
+	file *os.File
+	err error
+	dirPath="test/test2/"
+	fileName="demo"
+	filePath=dirPath+fileName
+)
+func xiugai()  {
+	//可写的方式打开文件
+	file,err:=os.OpenFile(filePath,os.O_WRONLY|os.O_TRUNC|os.O_CREATE,0666)
+	if err!=nil{
+		log.Fatal(err)
+	}
+	defer file.Close()
+	//将字节写入文件中
+	file.Write([]byte("写入字节.\r\n"))
+	//将字符串写入文件中
+	file.WriteString("写入字符串.\r\n")
+	
+	//打印文件内容
+	file,err=os.Open(filePath)
+	if err!=nil{
+		log.Fatal(err)
+	}
+	buf:=make([]byte,1024)
+	for {
+		n,_:=file.Read(buf)
+		if 0==n{
+			break
+		}
+		os.Stdout.Write(buf[:n])
+	}
+	file.Close()
+}
+func mian()  {
+	xiugai()
+}
+
+生产环境中摘取nginx
+package main
+import (
+	"bufio"
+	"bytes"
+	"fmt"
+	"log"
+	"os"
+	"os/exec"
+)
+func main() {
+	inputReader := bufio.NewReader(os.Stdin)
+	fmt.Printf("请输入您想摘取的nginx机器:")
+	input, err := inputReader.ReadString('\n')
+	if err != nil {
+		fmt.Println("There were errors reading, exiting program.")
+		return
+	}
+	fmt.Printf("您输入的nginx机器信息为: %s", input)
+	switch input {
+	case "O2O1\n":
+		exec_shell("sed -i 's/server 172.18.0.213/#server 172.18.0.213/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O1已下线")
+	case "O2O2\n":
+		exec_shell("sed -i 's/server 172.18.0.212/#server 172.18.0.212/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O2已下线")
+	case "O2O3\n":
+		exec_shell("sed -i 's/server 172.18.0.206/#server 172.18.0.206/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O3已下线")
+	case "O2O4\n":
+		exec_shell("sed -i 's/server 172.18.0.208/#server 172.18.0.208/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O4已下线")
+	case "O2O5\n":
+		exec_shell("sed -i 's/server 172.18.0.204/#server 172.18.0.204/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O5已下线")
+	case "O2O6\n":
+		exec_shell("sed -i 's/server 172.18.0.217/#server 172.18.0.217/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O6已下线")
+	case "O2O7\n":
+		exec_shell("sed -i 's/server 172.18.0.216/#server 172.18.0.216/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O7已下线")
+	case "O2O8\n":
+		exec_shell("sed -i 's/server 172.18.17.66/#server 172.18.17.66/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O8已下线")
+	default:
+		fmt.Println("sorry,您输入的服务器不在此生产环境中,请核实后再输入!")
+	}
+}
+func exec_shell(s string,m string) {
+	cmd := exec.Command("/bin/bash", "-c", s,m)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%s", out.String())
+
+}
+
+
+
+生产nginx上线
+package main
+import (
+	"bufio"
+	"bytes"
+	"fmt"
+	"log"
+	"os"
+	"os/exec"
+)
+func main() {
+	inputReader := bufio.NewReader(os.Stdin)
+	fmt.Printf("请输入您想上线的nginx机器:")
+	input, err := inputReader.ReadString('\n')
+	if err != nil {
+		fmt.Println("There were errors reading, exiting program.")
+		return
+	}
+	fmt.Printf("您输入的nginx机器信息为: %s", input)
+	switch input {
+	case "O2O1\n":
+		exec_shell("sed -i 's/#server 172.18.0.213/server 172.18.0.213/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O1已上线")
+	case "O2O2\n":
+		exec_shell("sed -i 's/#server 172.18.0.212/server 172.18.0.212/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O2已上线")
+	case "O2O3\n":
+		exec_shell("sed -i 's/#server 172.18.0.206/server 172.18.0.206/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O3已上线")
+	case "O2O4\n":
+		exec_shell("sed -i 's/#server 172.18.0.208/server 172.18.0.208/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O4已上线")
+	case "O2O5\n":
+		exec_shell("sed -i 's/#server 172.18.0.204/server 172.18.0.204/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O5已上线")
+	case "O2O6\n":
+		exec_shell("sed -i 's/#server 172.18.0.217/server 172.18.0.217/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O6已上线")
+	case "O2O7\n":
+		exec_shell("sed -i 's/#server 172.18.0.216/server 172.18.0.216/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O7已上线")
+	case "O2O8\n":
+		exec_shell("sed -i 's/#server 172.18.17.66/server 172.18.17.66/g' devopsseer.conf ","systemctl reload nginx ")
+		fmt.Println("O2O8已上线")
+	default:
+		fmt.Println("sorry,您输入的服务器不在此生产环境中,请核实后再输入!")
+	}
+}
+func exec_shell(s string,m string) {
+	cmd := exec.Command("/bin/bash", "-c", s,m)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%s", out.String())
+
+}
+
+https://help.aliyun.com/document_detail/27633.html?spm=a2c4g.11174283.6.743.1f371192z82H66 这个是阿里云的Go调用api移除ECS实例的api脚本
+
+go删除mongodb的方法
+package main
+import (
+	"gopkg.in/mgo.v2"
+)
+func main() {
+	session, err := mgo.Dial("mongodb://admin:siss.admin.mongo@128.0.100.172:27017/siss")
+	if err != nil {
+		panic(err)
+	}
+	c := session.DB("siss").C("item_info") //选择siss库的item_info表
+	m1 := map[string]interface{}{"shopId": "No-842330"} //根据指定的shopid删除它的value
+	c.Remove(m1)
+}
+
+https://blog.51cto.com/dellinger/2447790?utm_campaign=studygolang.com&utm_medium=studygolang.com&utm_source=studygolang.com Go语言实现钉钉发送通知
+
+
+
+web实战
+Go实战web小项目:
+Go利用http模块开发web站点
+http://localhost:9999/html
+http://localhost:9999/image
+http://localhost:9999
+http://localhost:9999/json
+
+package main
+import (
+	"encoding/json"
+	"fmt"
+	"html/template"
+	"io"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"path"
+)
+func sendhttprequestDemo()  {
+	req,err:=http.NewRequest(http.MethodGet,"http://www.baidu.com",nil)
+	if err!=nil{
+		panic(err)
+	}
+	req.Header.Add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36")
+	req.Header.Add("Host","www.baidu.com")
+	//resp,err:=http.Get("http://www.baidu.com") //构造如何发起请求
+	resp,err:=http.DefaultClient.Do(req) //发起请求
+
+	if err !=nil{
+		panic(err)
+	}
+	defer resp.Body.Close()
+	body,err:=ioutil.ReadAll(resp.Body)
+	if err!=nil{
+		panic(err)
+	}
+	fmt.Println(string(body))
+}
+type User struct {
+	Name string `json:"name"`
+	Age int `json:"age"`
+}
+//{"name":"cnych","age":20}
+func main(){
+	//sendhttprequestDemo()
+	http.HandleFunc("/",func(writer http.ResponseWriter,request *http.Request){
+		io.WriteString(writer,"hello Golang\n")
+	})
+	http.HandleFunc("/json",func(writer http.ResponseWriter,request *http.Request){
+		user:=User{
+			Name: "cnych",
+			Age:  30,
+		}
+		userJson,err:=json.Marshal(user)
+		if err!=nil{
+			http.Error(writer,err.Error(),http.StatusInternalServerError)
+			return
+		}
+		writer.Header().Set("Content-Type","application/json")
+		writer.Write(userJson)
+	})
+	http.HandleFunc("/image",func(writer http.ResponseWriter,request *http.Request) {
+		image:=path.Join("image","image.jpg")
+		http.ServeFile(writer,request,image)
+	})
+	http.HandleFunc("/html",func(writer http.ResponseWriter,request *http.Request) {
+		user:=User{
+			Name: "cnych",
+			Age:  30,
+		}
+		htmlFile:=path.Join("templates","index.html")
+		tmpl,err:=template.ParseFiles(htmlFile)
+		if err!=nil{
+			http.Error(writer,err.Error(),http.StatusInternalServerError)
+			return
+		}
+		if err:=tmpl.Execute(writer,user);err!=nil{
+			http.Error(writer,err.Error(),http.StatusInternalServerError)
+		}
+
+	})
+	log.Fatal(http.ListenAndServe(":8000",nil))
+}
+
+
+
+
+
+
+
+在templates目录下创建index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Hello {{.Name}},I'm {{.Age}}</h1>
+<p>这是golang模板</p>
+</body>
+</html>
+在image目录下创建image.jpg文件
+
+
+
+https://www.cnblogs.com/Xjx-zhenCai/p/11808315.html linux部署go
+wget https://dl.google.com/go/go1.13.4.linux-amd64.tar.gz 下载linux的包
+mkdir -p /usr/gopath/
+tar -C /usr/gopath/ -xvf go1.13.4.linux-amd64.tar.gz 解压至指定目录
+cd /usr/gopath/ 看到有go文件
+vim /etc/profile
+#添加
+export GOROOT=/usr/gopath/go
+export GOPATH=/usr/gopath/gocode
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+:wq
+source /etc/profile 使配置文件生效
+go version 查看版本号 
+go env 查看go配置信息
+cd gocode/
+mkdir src
+mkdir helloworld
+cd helloworld
+vim main.go
+代码同上
+mkdir templates 在helloworld目录创建
+mkdir image
+cd templates/
+vim index.html
+代码同上
+cd image
+放imgae.jpg文件进来
+
+
+
+yum install nginx -y
+cd /etc/nginx/conf.d/
+vim default.conf  #go程序运行非常简单 直接解释器运行即可 我们一般用nginx代理它即可 程序都有端口的
+upstream web {
+ server 127.0.0.1:8000;
+}
+server {
+ listen 80;
+ server_name web.coolcat.com;
+ access_log  /var/log/nginx/access.log  main; #默认在nginx.conf文件里面有写
+ location / {
+  proxy_set_header Host $http_host;
+  proxy_set_header X-Forwarded-Host $http_host;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Real-IP $remote_addr;
+  client_max_body_size 5m;
+  proxy_pass http://web;
+ }
+}
+
+
+上面的程序如何让go放在后台执行:
+go build test.go
+go build -o custom_name  指定输出文件名
+chmod 777 main.go
+nohup ./custom_name &  #程序后台运行
+nohup ./custom_name >/dev/null 2>&1 & #不输出错误信息
+ps aux|grep custom_name  查看进程号
+kill 3955
+vim /etc/rc.local  #设置开机自启动运行go程序
+cd /usr/gopath/gocode/src/helloworld
+nohup ./custom_name &
+
+
+利用go实现重启ecs:这个阿里官方有app无需我们自己写脚本
+go get github.com/aliyun/alibaba-cloud-sdk-go/sdk/requests 首先导入阿里云的官方包
+用户登录名称 dev@1030773097754459.onaliyun.com
+AccessKey ID LTAI4FnxcARhHejromYBWeHP
+AccessKeySecret ImX9ACMb02VqnMHEBru6pS1mWUdC2p
+
+package main
+import (
+	"fmt"
+	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/requests"
+	"github.com/aliyun/alibaba-cloud-sdk-go/services/ecs"
+)
+func main() {
+	client, err := ecs.NewClientWithAccessKey("cn-shenzhen", "LTAI4FnxcARhHejromYBWeHP", "ImX9ACMb02VqnMHEBru6pS1mWUdC2p") //地区深圳 跟AccessKey和AccessSecert
+	request := ecs.CreateRebootInstanceRequest()
+	request.Scheme = "https"
+	request.InstanceId = "i-wz9c8miiew899x9re9e0"
+	request.ForceStop = requests.NewBoolean(false)
+	request.DryRun = requests.NewBoolean(false)
+	response, err := client.RebootInstance(request)
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+	fmt.Printf("response is %#v\n", response)
+}
+
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'GuYuePass666!';
+https://github.com/cnych/productgo.git
+https://github.com/cnych/pogo.git
+go js html css
+
+go实现对于mongodb数据库的增删改查
+// mgotest project main.go
+//在终端执行go get gopkg.in/mgo.v2导入包
+package main
+
+import (
+	"fmt"
+	"gopkg.in/mgo.v2"
+	"time"
+	"gopkg.in/mgo.v2/bson"
+)
+
+type User struct {
+	Id        bson.ObjectId `bson:"_id"`
+	Username  string        `bson:"name"`
+	Pass      string        `bson:"pass"`
+	Regtime   int64         `bson:"regtime"`
+	Interests []string      `bson:"interests"`
+}
+
+const URL string = "39.108.51.229:27017"
+
+var c *mgo.Collection
+var session *mgo.Session
+
+func (user User) ToString() string {
+	return fmt.Sprintf("%#v", user)
+}
+
+func init() {
+	session, _ = mgo.Dial(URL)
+	//切换到数据库
+	db := session.DB("blog")
+	//切换到collection
+	c = db.C("mgotest")
+}
+
+//新增数据
+func add() {
+	//    defer session.Close()
+	stu1 := new(User)
+	stu1.Id = bson.NewObjectId()
+	stu1.Username = "stu1_name"
+	stu1.Pass = "stu1_pass"
+	stu1.Regtime = time.Now().Unix()
+	stu1.Interests = []string{"象棋", "游泳", "跑步"}
+	err := c.Insert(stu1)
+	if err == nil {
+		fmt.Println("插入成功")
+	} else {
+		fmt.Println(err.Error())
+		defer panic(err)
+	}
+}
+
+//查询
+func find() {
+	//    defer session.Close()
+	var users []User
+	//    c.Find(nil).All(&users)
+	c.Find(bson.M{"name": "stu1_name"}).All(&users)
+	for _, value := range users {
+		fmt.Println(value.ToString())
+	}
+	//根据ObjectId进行查询
+	idStr := "577fb2d1cde67307e819133d"
+	objectId := bson.ObjectIdHex(idStr)
+	user := new(User)
+	c.Find(bson.M{"_id": objectId}).One(user)
+	fmt.Println(user)
+}
+
+//根据id进行修改
+func update() {
+	interests := []string{"象棋", "游泳", "跑步"}
+	err := c.Update(bson.M{"_id": bson.ObjectIdHex("577fb2d1cde67307e819133d")}, bson.M{"$set": bson.M{
+		"name":      "修改后的name",
+		"pass":      "修改后的pass",
+		"regtime":   time.Now().Unix(),
+		"interests": interests,
+	}})
+	if err != nil {
+		fmt.Println("修改失败")
+	} else {
+		fmt.Println("修改成功")
+	}
+}
+
+//删除
+func del() {
+	err := c.Remove(bson.M{"_id": bson.ObjectIdHex("577fb2d1cde67307e819133d")})
+	if err != nil {
+		fmt.Println("删除失败" + err.Error())
+	} else {
+		fmt.Println("删除成功")
+	}
+}
+func main() {
+	add()
+	find()
+	update()
+	del()
+}
